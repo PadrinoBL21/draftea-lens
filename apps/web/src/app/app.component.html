@@ -1,9 +1,9 @@
 <main class="shell">
   <section class="hero">
     <div>
-      <p class="eyebrow">LEGO 7 · Dynamic Catalog Scanner</p>
+      <p class="eyebrow">LEGO 8 · Smart Scanner Web Final</p>
       <h1>Draftea Lens</h1>
-      <p class="subtitle">El usuario solo mete bankroll. El sistema descubre deportes activos, consulta mercados seguros por API y ordena candidatos reales.</p>
+      <p class="subtitle">Ingresa bankroll. El sistema descubre deportes, prioriza Mundial, consulta mercados válidos y ordena oportunidades reales.</p>
     </div>
 
     <div class="status-card">
@@ -20,7 +20,7 @@
       <div>
         <p class="eyebrow">Modo usuario</p>
         <h2>Smart Scan</h2>
-        <p class="panel-copy">Sin deporte, sin mercado, sin bookmaker. La API arma el catálogo de consulta por dentro.</p>
+        <p class="panel-copy">Sin deporte, sin mercado, sin bookmaker. La API arma el catálogo por dentro y evita mercados inválidos.</p>
       </div>
       <span class="badge good">Solo bankroll</span>
     </div>
@@ -32,7 +32,7 @@
       </label>
 
       <button class="primary" type="submit" [disabled]="loading()">
-        {{ loading() ? 'Escaneando mercados...' : 'Escanear oportunidades' }}
+        {{ loading() ? 'Escaneando mercados reales...' : 'Escanear oportunidades' }}
       </button>
     </form>
 
@@ -40,7 +40,7 @@
 
     <ng-container *ngIf="result(); else emptyState">
       <div class="summary-grid">
-        <div class="summary-card">
+        <div class="summary-card hero-summary">
           <div>
             <small>Bankroll</small>
             <strong>{{ money(result()!.query.bankroll) }}</strong>
@@ -61,7 +61,7 @@
             <strong>{{ result()!.totals.activeSports ?? '—' }}</strong>
           </div>
           <div>
-            <small>Deportes escaneados</small>
+            <small>Escaneados</small>
             <strong>{{ result()!.totals.scannedSports ?? '—' }}</strong>
           </div>
           <div>
@@ -71,14 +71,50 @@
         </div>
       </div>
 
+      <div class="worldcup-strip" *ngIf="worldCupSports().length">
+        <div>
+          <p class="eyebrow">Mundial detectado</p>
+          <h3>FIFA World Cup está dentro del escaneo</h3>
+          <p>El scanner priorizó los mercados de partido y separó futuros/outrights cuando están disponibles.</p>
+        </div>
+        <div class="worldcup-sports">
+          <span *ngFor="let sport of worldCupSports()">{{ sport.title }} · {{ sport.marketsRequested }} · {{ sport.eventsReturned }} eventos</span>
+        </div>
+      </div>
+
       <div class="top-candidate" *ngIf="topCandidate() as top">
         <div>
           <p class="eyebrow">Top candidate</p>
           <h3>{{ top.eventName }}</h3>
-          <p>{{ top.selection }} · {{ marketLabel(top) }} · mejor momio {{ top.bestOddsDecimal.toFixed(2) }} en {{ top.bestBookmaker }}</p>
+          <p>{{ sportLabel(top.sportKey) }} · {{ top.selection }} · {{ marketLabel(top) }} · mejor momio {{ top.bestOddsDecimal.toFixed(2) }} en {{ top.bestBookmaker }}</p>
         </div>
         <strong class="score-pill">Score {{ top.score.toFixed(2) }}</strong>
       </div>
+
+      <section class="buckets" *ngIf="buckets().length">
+        <article *ngFor="let bucket of buckets()" [class]="bucketClass(bucket)">
+          <div class="bucket-header">
+            <div>
+              <h3>{{ bucket.label }}</h3>
+              <p>{{ bucket.subtitle }}</p>
+            </div>
+            <span>{{ bucket.candidates.length }}</span>
+          </div>
+
+          <div class="bucket-list">
+            <div class="bucket-row" *ngFor="let candidate of bucket.candidates">
+              <div>
+                <strong>{{ candidate.eventName }}</strong>
+                <small>{{ sportLabel(candidate.sportKey) }} · {{ marketLabel(candidate) }} · {{ candidate.selection }}</small>
+              </div>
+              <div class="bucket-odds">
+                <strong>{{ candidate.bestOddsDecimal.toFixed(2) }}</strong>
+                <small>{{ candidate.bestBookmaker }}</small>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
 
       <div class="catalog-box" *ngIf="scannedSports().length">
         <div class="catalog-header">
@@ -96,7 +132,15 @@
 
       <div class="warning-box" *ngIf="result()!.warnings.length">
         <strong>Notas del scanner</strong>
-        <p *ngFor="let warning of result()!.warnings.slice(0, 6)">{{ warning }}</p>
+        <p *ngFor="let warning of result()!.warnings.slice(0, 5)">{{ warning }}</p>
+      </div>
+
+      <div class="table-title">
+        <div>
+          <p class="eyebrow">Todas las oportunidades</p>
+          <h3>Market intelligence</h3>
+        </div>
+        <span class="badge">{{ result()!.candidates.length }} candidatos</span>
       </div>
 
       <div class="table-wrap">
@@ -119,9 +163,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let row of result()!.candidates; let i = index" [class.best]="i === 0">
+            <tr *ngFor="let row of result()!.candidates; let i = index" [class.best]="i === 0" [class.worldcup-row]="row.sportKey.includes('world_cup')">
               <td><strong>{{ row.score.toFixed(2) }}</strong></td>
-              <td>{{ row.sportKey }}</td>
+              <td>{{ sportLabel(row.sportKey) }}</td>
               <td>{{ row.eventName }}</td>
               <td>{{ localDate(row.commenceTime) }}</td>
               <td>{{ marketLabel(row) }}</td>

@@ -1,5 +1,5 @@
 .shell {
-  width: min(1400px, calc(100% - 32px));
+  width: min(1440px, calc(100% - 32px));
   margin: 0 auto;
   padding: 40px 0;
 }
@@ -43,7 +43,7 @@ h2 {
 
 .subtitle,
 .panel-copy {
-  max-width: 760px;
+  max-width: 780px;
   color: #9eadbb;
   font-size: 18px;
 }
@@ -53,7 +53,8 @@ h2 {
 .summary-card,
 .catalog-box,
 .why,
-.empty {
+.empty,
+.bucket {
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: linear-gradient(145deg, rgba(16, 24, 33, 0.92), rgba(8, 12, 18, 0.92));
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
@@ -138,7 +139,7 @@ h2 {
 
 .bankroll-form {
   display: grid;
-  grid-template-columns: minmax(260px, 0.4fr) auto;
+  grid-template-columns: minmax(260px, 0.42fr) auto;
   gap: 14px;
   align-items: end;
   margin-bottom: 18px;
@@ -156,10 +157,10 @@ h2 {
 }
 
 .bankroll-field input {
-  font-size: 28px;
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  padding: 18px 18px;
+  font-size: 32px;
+  font-weight: 950;
+  letter-spacing: -0.05em;
+  padding: 18px;
 }
 
 input {
@@ -183,9 +184,9 @@ button {
 }
 
 .primary {
-  min-height: 64px;
+  min-height: 68px;
   border-radius: 18px;
-  padding: 16px 22px;
+  padding: 16px 24px;
   color: #02130b;
   font-weight: 950;
   background: linear-gradient(135deg, #39ff9c, #9cffcb);
@@ -221,6 +222,10 @@ button {
   border-radius: 22px;
 }
 
+.hero-summary {
+  border-color: rgba(57, 255, 156, 0.18);
+}
+
 .summary-card small {
   display: block;
   color: #8ea0af;
@@ -232,6 +237,7 @@ button {
   font-size: 24px;
 }
 
+.worldcup-strip,
 .top-candidate {
   display: flex;
   justify-content: space-between;
@@ -244,13 +250,29 @@ button {
   border: 1px solid rgba(57, 255, 156, 0.18);
 }
 
+.worldcup-strip h3,
 .top-candidate h3 {
   margin-bottom: 6px;
 }
 
+.worldcup-strip p,
 .top-candidate p {
   margin: 0;
   color: #bdd0df;
+}
+
+.worldcup-sports {
+  display: grid;
+  gap: 8px;
+  min-width: min(520px, 100%);
+}
+
+.worldcup-sports span {
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #eaf2f8;
+  font-size: 13px;
 }
 
 .score-pill {
@@ -265,13 +287,100 @@ button {
   box-shadow: 0 16px 44px rgba(57, 255, 156, 0.18);
 }
 
+.buckets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.bucket {
+  border-radius: 24px;
+  padding: 18px;
+  overflow: hidden;
+}
+
+.bucket-worldcup { border-color: rgba(57, 255, 156, 0.28); }
+.bucket-moneyline { border-color: rgba(96, 165, 250, 0.24); }
+.bucket-totals { border-color: rgba(168, 85, 247, 0.24); }
+.bucket-spread { border-color: rgba(251, 191, 36, 0.24); }
+.bucket-clean { border-color: rgba(45, 212, 191, 0.24); }
+.bucket-price { border-color: rgba(248, 113, 113, 0.24); }
+
+.bucket-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.bucket-header h3 {
+  margin-bottom: 5px;
+}
+
+.bucket-header p {
+  margin: 0;
+  color: #9eadbb;
+  font-size: 13px;
+}
+
+.bucket-header span {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
+  font-weight: 900;
+}
+
+.bucket-list {
+  display: grid;
+  gap: 10px;
+}
+
+.bucket-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.bucket-row strong,
+.bucket-row small,
+.bucket-odds strong,
+.bucket-odds small {
+  display: block;
+}
+
+.bucket-row small,
+.bucket-odds small {
+  color: #91a3b2;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.bucket-odds {
+  text-align: right;
+}
+
+.bucket-odds strong {
+  color: #6df7b0;
+  font-size: 20px;
+}
+
 .catalog-box {
   margin-top: 18px;
   border-radius: 24px;
   padding: 18px;
 }
 
-.catalog-header {
+.catalog-header,
+.table-title {
   display: flex;
   justify-content: space-between;
   gap: 16px;
@@ -318,6 +427,14 @@ button {
   font-size: 0.86rem;
 }
 
+.table-title {
+  margin-top: 22px;
+}
+
+.table-title h3 {
+  margin-bottom: 0;
+}
+
 .table-wrap {
   overflow: auto;
   border-radius: 22px;
@@ -351,8 +468,13 @@ td {
   color: #eaf2f8;
 }
 
-tr.best {
-  background: rgba(57, 255, 156, 0.07);
+tr.best,
+tr.worldcup-row {
+  background: rgba(57, 255, 156, 0.055);
+}
+
+tr.best.worldcup-row {
+  background: rgba(57, 255, 156, 0.09);
 }
 
 .positive {
@@ -403,7 +525,10 @@ tr.best {
   .panel-header,
   .summary-grid,
   .top-candidate,
-  .bankroll-form {
+  .worldcup-strip,
+  .bankroll-form,
+  .catalog-header,
+  .table-title {
     grid-template-columns: 1fr;
     display: grid;
   }
