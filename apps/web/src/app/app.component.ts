@@ -14,7 +14,7 @@ type MoneylineOutcomeInput = {
 type MoneylineOutcomeResult = MoneylineOutcomeInput & {
   impliedProbabilityRaw: number;
   impliedProbabilityNoVig: number;
-  fairOdds: number;
+  fairOdds: number | null;
   edgeRaw: number;
   edgeNoVig: number;
   expectedValuePerUnit: number;
@@ -38,6 +38,37 @@ type MoneylineAnalyzeResult = {
   };
 };
 
+type MarketSelection = {
+  label: string;
+  oddsDecimal: number;
+  rawLine: string;
+};
+
+type ImportedMarket = {
+  marketType: string;
+  displayName: string;
+  selections: MarketSelection[];
+};
+
+type ImportedEvent = {
+  eventName: string;
+  markets: ImportedMarket[];
+};
+
+type MarketImportResult = {
+  source: string;
+  sport: string;
+  league: string;
+  importedAt: string;
+  events: ImportedEvent[];
+  warnings: { lineNumber: number; line: string; message: string }[];
+  totals: {
+    events: number;
+    markets: number;
+    selections: number;
+  };
+};
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -54,6 +85,22 @@ export class AppComponent {
   readonly isLoading = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly result = signal<MoneylineAnalyzeResult | null>(null);
+
+  readonly marketRawText = signal(`Canada vs Morocco
+Moneyline
+Canada 2.40
+Draw 3.25
+Morocco 2.90
+
+Player Props
+Hakimi 1+ tiro 1.55
+David 1+ tiro a puerta 2.10
+Bono más de 3.5 atajadas 1.85`);
+  readonly marketSport = signal('soccer');
+  readonly marketLeague = signal('world_cup');
+  readonly marketImportLoading = signal(false);
+  readonly marketImportError = signal<string | null>(null);
+  readonly marketImportResult = signal<MarketImportResult | null>(null);
 
   readonly outcomes = signal<MoneylineOutcomeInput[]>([
     { label: 'Canada', oddsDecimal: 2.4, modelProbability: 0.412 },
@@ -135,6 +182,43 @@ export class AppComponent {
         this.isLoading.set(false);
       },
     });
+  }
+
+  importMarkets(): void {
+    this.marketImportError.set(null);
+    this.marketImportResult.set(null);
+    this.marketImportLoading.set(true);
+
+    const payload = {
+      rawText: this.marketRawText(),
+      sport: this.marketSport(),
+      league: this.marketLeague(),
+      source: 'draftea_visible',
+    };
+
+    this.http.post<MarketImportResult>(`${this.apiBaseUrl()}/markets/import-text`, payload).subscribe({
+      next: (result) => {
+        this.marketImportResult.set(result);
+        this.marketImportLoading.set(false);
+      },
+      error: (error) => {
+        this.marketImportError.set(error?.error?.message ?? error?.message ?? 'No se pudieron importar los mercados.');
+        this.marketImportLoading.set(false);
+      },
+    });
+  }
+
+  applyMoneylineFromImport(event: ImportedEvent, market: ImportedMarket): void {
+    this.eventName.set(event.eventName);
+    const probability = market.selections.length > 0 ? 1 / market.selections.length : 0.33;
+    this.outcomes.set(
+      market.selections.map((selection) => ({
+        label: selection.label,
+        oddsDecimal: selection.oddsDecimal,
+        modelProbability: Number(probability.toFixed(4)),
+      })),
+    );
+    this.result.set(null);
   }
 
   decisionLabel(decision: Decision): string {

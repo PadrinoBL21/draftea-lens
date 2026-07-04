@@ -1,9 +1,9 @@
 <main class="shell">
   <section class="hero">
     <div>
-      <p class="eyebrow">LEGO 2 · Lens Lite Web</p>
+      <p class="eyebrow">LEGO 3 · Real Market Importer</p>
       <h1>Draftea Lens Lite</h1>
-      <p class="subtitle">Analizador rápido de moneyline: momio, probabilidad, edge, EV, stake y decisión.</p>
+      <p class="subtitle">Primero capturamos mercados reales visibles. Después conectamos el scanner automático.</p>
     </div>
 
     <div class="status-card">
@@ -15,11 +15,104 @@
     </div>
   </section>
 
+  <section class="panel importer-panel">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Mercados reales</p>
+        <h2>Real Market Importer</h2>
+      </div>
+      <span class="badge warn">Read-only</span>
+    </div>
+
+    <div class="importer-grid">
+      <div class="import-box">
+        <div class="import-meta">
+          <label class="field compact">
+            <span>Deporte</span>
+            <input [ngModel]="marketSport()" (ngModelChange)="marketSport.set($event)" name="marketSport" />
+          </label>
+          <label class="field compact">
+            <span>Liga</span>
+            <input [ngModel]="marketLeague()" (ngModelChange)="marketLeague.set($event)" name="marketLeague" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Pega aquí mercados reales visibles de Draftea</span>
+          <textarea [ngModel]="marketRawText()" (ngModelChange)="marketRawText.set($event)" name="marketRawText" rows="10"></textarea>
+        </label>
+
+        <button class="primary" type="button" (click)="importMarkets()" [disabled]="marketImportLoading()">
+          {{ marketImportLoading() ? 'Importando...' : 'Importar mercados reales' }}
+        </button>
+
+        <div class="error" *ngIf="marketImportError()">{{ marketImportError() }}</div>
+      </div>
+
+      <div class="import-result" *ngIf="marketImportResult(); else importEmpty">
+        <div class="summary-card imported">
+          <div>
+            <small>Eventos</small>
+            <strong>{{ marketImportResult()!.totals.events }}</strong>
+          </div>
+          <div>
+            <small>Mercados</small>
+            <strong>{{ marketImportResult()!.totals.markets }}</strong>
+          </div>
+          <div>
+            <small>Selecciones</small>
+            <strong>{{ marketImportResult()!.totals.selections }}</strong>
+          </div>
+        </div>
+
+        <div class="market-event" *ngFor="let event of marketImportResult()!.events">
+          <h3>{{ event.eventName }}</h3>
+
+          <div class="market-card" *ngFor="let market of event.markets">
+            <div class="market-card-header">
+              <strong>{{ market.displayName }}</strong>
+              <span>{{ market.marketType }}</span>
+            </div>
+
+            <div class="selection-row" *ngFor="let selection of market.selections">
+              <span>{{ selection.label }}</span>
+              <strong>{{ selection.oddsDecimal.toFixed(2) }}</strong>
+            </div>
+
+            <button
+              class="ghost wide"
+              type="button"
+              *ngIf="market.marketType === 'moneyline'"
+              (click)="applyMoneylineFromImport(event, market)"
+            >
+              Mandar a Moneyline Analyzer
+            </button>
+          </div>
+        </div>
+
+        <div class="warning-box" *ngIf="marketImportResult()!.warnings.length">
+          <strong>Líneas ignoradas</strong>
+          <p *ngFor="let warning of marketImportResult()!.warnings.slice(0, 5)">
+            Línea {{ warning.lineNumber }}: {{ warning.line }}
+          </p>
+        </div>
+      </div>
+
+      <ng-template #importEmpty>
+        <div class="empty compact-empty">
+          <div class="orb"></div>
+          <h3>Esperando mercados</h3>
+          <p>Pega mercados reales visibles. El parser los convierte en eventos, mercados y selecciones normalizadas.</p>
+        </div>
+      </ng-template>
+    </div>
+  </section>
+
   <section class="grid">
     <form class="panel form-panel" (ngSubmit)="analyze()">
       <div class="panel-header">
         <div>
-          <p class="eyebrow">Entrada</p>
+          <p class="eyebrow">Motor</p>
           <h2>Moneyline Analyzer</h2>
         </div>
         <div class="sample-actions">
@@ -111,7 +204,7 @@
                 <td>{{ row.oddsDecimal.toFixed(2) }}</td>
                 <td>{{ percent(row.modelProbability) }}</td>
                 <td>{{ percent(row.impliedProbabilityRaw) }}</td>
-                <td>{{ row.fairOdds.toFixed(2) }}</td>
+                <td>{{ row.fairOdds === null ? '—' : row.fairOdds.toFixed(2) }}</td>
                 <td [class.positive]="row.edgeRaw > 0" [class.negative]="row.edgeRaw < 0">{{ signedPercent(row.edgeRaw) }}</td>
                 <td [class.positive]="row.expectedValuePerUnit > 0" [class.negative]="row.expectedValuePerUnit < 0">{{ row.expectedValuePerUnit.toFixed(3) }}</td>
                 <td>{{ money(row.stakeSuggested) }}</td>
@@ -133,7 +226,7 @@
         <div class="empty">
           <div class="orb"></div>
           <h3>Listo para analizar</h3>
-          <p>Mete momios de Draftea, probabilidad modelo/manual y bankroll. El motor te dice si hay single viable, watch o no bet.</p>
+          <p>Primero importa mercados reales. Luego manda moneyline al motor y ajusta probabilidades cuando tengamos modelo.</p>
         </div>
       </ng-template>
     </section>
