@@ -1,0 +1,141 @@
+<main class="shell">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">LEGO 2 · Lens Lite Web</p>
+      <h1>Draftea Lens Lite</h1>
+      <p class="subtitle">Analizador rápido de moneyline: momio, probabilidad, edge, EV, stake y decisión.</p>
+    </div>
+
+    <div class="status-card">
+      <span class="dot"></span>
+      <div>
+        <strong>API local</strong>
+        <small>{{ apiBaseUrl() }}</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <form class="panel form-panel" (ngSubmit)="analyze()">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">Entrada</p>
+          <h2>Moneyline Analyzer</h2>
+        </div>
+        <div class="sample-actions">
+          <button type="button" class="ghost" (click)="loadNoBetSample()">No bet sample</button>
+          <button type="button" class="ghost" (click)="loadValueSample()">Value sample</button>
+        </div>
+      </div>
+
+      <label class="field">
+        <span>Nombre del evento</span>
+        <input [ngModel]="eventName()" (ngModelChange)="eventName.set($event)" name="eventName" />
+      </label>
+
+      <label class="field">
+        <span>Bankroll</span>
+        <input type="number" min="1" [ngModel]="bankroll()" (ngModelChange)="bankroll.set(+$event)" name="bankroll" />
+      </label>
+
+      <div class="outcomes-header">
+        <span>Selecciones</span>
+        <button type="button" class="ghost" (click)="addOutcome()">+ Agregar</button>
+      </div>
+
+      <div class="outcome-editor" *ngFor="let outcome of outcomes(); let i = index">
+        <input [ngModel]="outcome.label" (ngModelChange)="updateOutcome(i, 'label', $event)" [name]="'label-' + i" placeholder="Selección" />
+        <input type="number" step="0.01" min="1.01" [ngModel]="outcome.oddsDecimal" (ngModelChange)="updateOutcome(i, 'oddsDecimal', $event)" [name]="'odds-' + i" placeholder="Momio" />
+        <input type="number" step="0.001" min="0" max="1" [ngModel]="outcome.modelProbability" (ngModelChange)="updateOutcome(i, 'modelProbability', $event)" [name]="'prob-' + i" placeholder="Prob." />
+        <button type="button" class="remove" (click)="removeOutcome(i)" [disabled]="outcomes().length <= 2">×</button>
+      </div>
+
+      <div class="hint" [class.warning]="modelTotal() < 0.99 || modelTotal() > 1.01">
+        Total probabilidad modelo: {{ percent(modelTotal()) }}
+      </div>
+
+      <button class="primary" type="submit" [disabled]="isLoading()">
+        {{ isLoading() ? 'Analizando...' : 'Analizar moneyline' }}
+      </button>
+
+      <div class="error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+    </form>
+
+    <section class="panel result-panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">Resultado</p>
+          <h2>Decisión del motor</h2>
+        </div>
+        <span class="badge" *ngIf="result()" [class.good]="result()?.summary?.recommendation === 'single_viable'" [class.warn]="result()?.summary?.recommendation === 'watch'" [class.bad]="result()?.summary?.recommendation === 'no_bet'">
+          {{ decisionLabel(result()!.summary.recommendation) }}
+        </span>
+      </div>
+
+      <ng-container *ngIf="result(); else emptyState">
+        <div class="summary-card">
+          <div>
+            <small>Evento</small>
+            <strong>{{ result()!.eventName }}</strong>
+          </div>
+          <div>
+            <small>Hold casa</small>
+            <strong>{{ percent(result()!.marketHoldPct) }}</strong>
+          </div>
+          <div>
+            <small>Bankroll</small>
+            <strong>{{ money(result()!.bankroll) }}</strong>
+          </div>
+        </div>
+
+        <p class="message">{{ result()!.summary.message }}</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Pick</th>
+                <th>Momio</th>
+                <th>Modelo</th>
+                <th>Imp.</th>
+                <th>Fair</th>
+                <th>Edge</th>
+                <th>EV</th>
+                <th>Stake</th>
+                <th>Decisión</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of result()!.outcomes" [class.best]="result()!.bestOutcome?.label === row.label">
+                <td>{{ row.label }}</td>
+                <td>{{ row.oddsDecimal.toFixed(2) }}</td>
+                <td>{{ percent(row.modelProbability) }}</td>
+                <td>{{ percent(row.impliedProbabilityRaw) }}</td>
+                <td>{{ row.fairOdds.toFixed(2) }}</td>
+                <td [class.positive]="row.edgeRaw > 0" [class.negative]="row.edgeRaw < 0">{{ signedPercent(row.edgeRaw) }}</td>
+                <td [class.positive]="row.expectedValuePerUnit > 0" [class.negative]="row.expectedValuePerUnit < 0">{{ row.expectedValuePerUnit.toFixed(3) }}</td>
+                <td>{{ money(row.stakeSuggested) }}</td>
+                <td><span class="mini-badge" [class.good]="row.decision === 'single_viable'" [class.warn]="row.decision === 'watch'" [class.bad]="row.decision === 'no_bet'">{{ decisionLabel(row.decision) }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="why" *ngIf="result()!.bestOutcome">
+          <h3>Por qué importa</h3>
+          <ul>
+            <li *ngFor="let reason of result()!.bestOutcome!.reasons">{{ reason }}</li>
+          </ul>
+        </div>
+      </ng-container>
+
+      <ng-template #emptyState>
+        <div class="empty">
+          <div class="orb"></div>
+          <h3>Listo para analizar</h3>
+          <p>Mete momios de Draftea, probabilidad modelo/manual y bankroll. El motor te dice si hay single viable, watch o no bet.</p>
+        </div>
+      </ng-template>
+    </section>
+  </section>
+</main>
