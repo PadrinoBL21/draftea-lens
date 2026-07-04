@@ -1,0 +1,15 @@
+{
+  "name": "draftea-lens",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm --workspace apps/api run start:dev",
+    "build": "npm --workspaces run build",
+    "test:core": "npm --workspace packages/core run test",
+    "lint": "echo \"lint pending\""
+  }
+}
