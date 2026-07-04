@@ -5,3 +5,9 @@ dist
 coverage
 .DS_Store
 npm-debug.log*
+.angular/
+apps/web/.angular/
+**/.angular/cache/s
+.angular/
+apps/web/.angular/
+**/.angular/cache/
