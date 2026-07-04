@@ -35,24 +35,43 @@ export interface AutoScanCandidate {
 }
 
 export interface AutoScanResult {
-  scanner: 'auto_scanner_v0_1';
+  scanner: 'auto_scanner_v0_1' | 'smart_catalog_scanner_v0_1';
   mode: 'market_intelligence_no_model_ev';
   scannedAt: string;
   query: {
     bankroll: number;
-    sport: string;
+    sport?: string;
+    sports?: string[];
     regions: string;
     markets: string;
     bookmakers?: string;
     oddsFormat: string;
     maxResults: number;
     minBookmakers: number;
+    sportLimit?: number;
+    hoursAhead?: number;
   };
   usage: OddsApiUsage;
   totals: {
     rawEvents: number;
     candidates: number;
     returned: number;
+    scannedSports?: number;
+    activeSports?: number;
+  };
+  catalog?: {
+    source: 'the-odds-api';
+    discoveredAt: string;
+    activeSports: number;
+    scannedSports: Array<{
+      key: string;
+      title: string;
+      group: string;
+      marketsRequested: string;
+      eventsReturned: number;
+      status: 'ok' | 'degraded' | 'skipped' | 'failed';
+      note?: string;
+    }>;
   };
   warnings: string[];
   candidates: AutoScanCandidate[];

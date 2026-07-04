@@ -1,234 +1,157 @@
 <main class="shell">
   <section class="hero">
     <div>
-      <p class="eyebrow">LEGO 3 · Real Market Importer</p>
-      <h1>Draftea Lens Lite</h1>
-      <p class="subtitle">Primero capturamos mercados reales visibles. Después conectamos el scanner automático.</p>
+      <p class="eyebrow">LEGO 7 · Dynamic Catalog Scanner</p>
+      <h1>Draftea Lens</h1>
+      <p class="subtitle">El usuario solo mete bankroll. El sistema descubre deportes activos, consulta mercados seguros por API y ordena candidatos reales.</p>
     </div>
 
     <div class="status-card">
       <span class="dot"></span>
       <div>
-        <strong>API local</strong>
+        <strong>API-first</strong>
         <small>{{ apiBaseUrl() }}</small>
       </div>
     </div>
   </section>
 
-  <section class="panel importer-panel">
+  <section class="panel command-panel">
     <div class="panel-header">
       <div>
-        <p class="eyebrow">Mercados reales</p>
-        <h2>Real Market Importer</h2>
+        <p class="eyebrow">Modo usuario</p>
+        <h2>Smart Scan</h2>
+        <p class="panel-copy">Sin deporte, sin mercado, sin bookmaker. La API arma el catálogo de consulta por dentro.</p>
       </div>
-      <span class="badge warn">Read-only</span>
+      <span class="badge good">Solo bankroll</span>
     </div>
 
-    <div class="importer-grid">
-      <div class="import-box">
-        <div class="import-meta">
-          <label class="field compact">
-            <span>Deporte</span>
-            <input [ngModel]="marketSport()" (ngModelChange)="marketSport.set($event)" name="marketSport" />
-          </label>
-          <label class="field compact">
-            <span>Liga</span>
-            <input [ngModel]="marketLeague()" (ngModelChange)="marketLeague.set($event)" name="marketLeague" />
-          </label>
-        </div>
-
-        <label class="field">
-          <span>Pega aquí mercados reales visibles de Draftea</span>
-          <textarea [ngModel]="marketRawText()" (ngModelChange)="marketRawText.set($event)" name="marketRawText" rows="10"></textarea>
-        </label>
-
-        <button class="primary" type="button" (click)="importMarkets()" [disabled]="marketImportLoading()">
-          {{ marketImportLoading() ? 'Importando...' : 'Importar mercados reales' }}
-        </button>
-
-        <div class="error" *ngIf="marketImportError()">{{ marketImportError() }}</div>
-      </div>
-
-      <div class="import-result" *ngIf="marketImportResult(); else importEmpty">
-        <div class="summary-card imported">
-          <div>
-            <small>Eventos</small>
-            <strong>{{ marketImportResult()!.totals.events }}</strong>
-          </div>
-          <div>
-            <small>Mercados</small>
-            <strong>{{ marketImportResult()!.totals.markets }}</strong>
-          </div>
-          <div>
-            <small>Selecciones</small>
-            <strong>{{ marketImportResult()!.totals.selections }}</strong>
-          </div>
-        </div>
-
-        <div class="market-event" *ngFor="let event of marketImportResult()!.events">
-          <h3>{{ event.eventName }}</h3>
-
-          <div class="market-card" *ngFor="let market of event.markets">
-            <div class="market-card-header">
-              <strong>{{ market.displayName }}</strong>
-              <span>{{ market.marketType }}</span>
-            </div>
-
-            <div class="selection-row" *ngFor="let selection of market.selections">
-              <span>{{ selection.label }}</span>
-              <strong>{{ selection.oddsDecimal.toFixed(2) }}</strong>
-            </div>
-
-            <button
-              class="ghost wide"
-              type="button"
-              *ngIf="market.marketType === 'moneyline'"
-              (click)="applyMoneylineFromImport(event, market)"
-            >
-              Mandar a Moneyline Analyzer
-            </button>
-          </div>
-        </div>
-
-        <div class="warning-box" *ngIf="marketImportResult()!.warnings.length">
-          <strong>Líneas ignoradas</strong>
-          <p *ngFor="let warning of marketImportResult()!.warnings.slice(0, 5)">
-            Línea {{ warning.lineNumber }}: {{ warning.line }}
-          </p>
-        </div>
-      </div>
-
-      <ng-template #importEmpty>
-        <div class="empty compact-empty">
-          <div class="orb"></div>
-          <h3>Esperando mercados</h3>
-          <p>Pega mercados reales visibles. El parser los convierte en eventos, mercados y selecciones normalizadas.</p>
-        </div>
-      </ng-template>
-    </div>
-  </section>
-
-  <section class="grid">
-    <form class="panel form-panel" (ngSubmit)="analyze()">
-      <div class="panel-header">
-        <div>
-          <p class="eyebrow">Motor</p>
-          <h2>Moneyline Analyzer</h2>
-        </div>
-        <div class="sample-actions">
-          <button type="button" class="ghost" (click)="loadNoBetSample()">No bet sample</button>
-          <button type="button" class="ghost" (click)="loadValueSample()">Value sample</button>
-        </div>
-      </div>
-
-      <label class="field">
-        <span>Nombre del evento</span>
-        <input [ngModel]="eventName()" (ngModelChange)="eventName.set($event)" name="eventName" />
-      </label>
-
-      <label class="field">
-        <span>Bankroll</span>
+    <form class="bankroll-form" (ngSubmit)="smartScan()">
+      <label class="field bankroll-field">
+        <span>¿Cuánto quieres usar?</span>
         <input type="number" min="1" [ngModel]="bankroll()" (ngModelChange)="bankroll.set(+$event)" name="bankroll" />
       </label>
 
-      <div class="outcomes-header">
-        <span>Selecciones</span>
-        <button type="button" class="ghost" (click)="addOutcome()">+ Agregar</button>
-      </div>
-
-      <div class="outcome-editor" *ngFor="let outcome of outcomes(); let i = index">
-        <input [ngModel]="outcome.label" (ngModelChange)="updateOutcome(i, 'label', $event)" [name]="'label-' + i" placeholder="Selección" />
-        <input type="number" step="0.01" min="1.01" [ngModel]="outcome.oddsDecimal" (ngModelChange)="updateOutcome(i, 'oddsDecimal', $event)" [name]="'odds-' + i" placeholder="Momio" />
-        <input type="number" step="0.001" min="0" max="1" [ngModel]="outcome.modelProbability" (ngModelChange)="updateOutcome(i, 'modelProbability', $event)" [name]="'prob-' + i" placeholder="Prob." />
-        <button type="button" class="remove" (click)="removeOutcome(i)" [disabled]="outcomes().length <= 2">×</button>
-      </div>
-
-      <div class="hint" [class.warning]="modelTotal() < 0.99 || modelTotal() > 1.01">
-        Total probabilidad modelo: {{ percent(modelTotal()) }}
-      </div>
-
-      <button class="primary" type="submit" [disabled]="isLoading()">
-        {{ isLoading() ? 'Analizando...' : 'Analizar moneyline' }}
+      <button class="primary" type="submit" [disabled]="loading()">
+        {{ loading() ? 'Escaneando mercados...' : 'Escanear oportunidades' }}
       </button>
-
-      <div class="error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
     </form>
 
-    <section class="panel result-panel">
-      <div class="panel-header">
-        <div>
-          <p class="eyebrow">Resultado</p>
-          <h2>Decisión del motor</h2>
-        </div>
-        <span class="badge" *ngIf="result()" [class.good]="result()?.summary?.recommendation === 'single_viable'" [class.warn]="result()?.summary?.recommendation === 'watch'" [class.bad]="result()?.summary?.recommendation === 'no_bet'">
-          {{ decisionLabel(result()!.summary.recommendation) }}
-        </span>
-      </div>
+    <div class="error" *ngIf="error()">{{ error() }}</div>
 
-      <ng-container *ngIf="result(); else emptyState">
+    <ng-container *ngIf="result(); else emptyState">
+      <div class="summary-grid">
         <div class="summary-card">
           <div>
-            <small>Evento</small>
-            <strong>{{ result()!.eventName }}</strong>
-          </div>
-          <div>
-            <small>Hold casa</small>
-            <strong>{{ percent(result()!.marketHoldPct) }}</strong>
-          </div>
-          <div>
             <small>Bankroll</small>
-            <strong>{{ money(result()!.bankroll) }}</strong>
+            <strong>{{ money(result()!.query.bankroll) }}</strong>
+          </div>
+          <div>
+            <small>Eventos</small>
+            <strong>{{ result()!.totals.rawEvents }}</strong>
+          </div>
+          <div>
+            <small>Candidatos</small>
+            <strong>{{ result()!.totals.returned }}</strong>
           </div>
         </div>
 
-        <p class="message">{{ result()!.summary.message }}</p>
+        <div class="summary-card">
+          <div>
+            <small>Deportes activos</small>
+            <strong>{{ result()!.totals.activeSports ?? '—' }}</strong>
+          </div>
+          <div>
+            <small>Deportes escaneados</small>
+            <strong>{{ result()!.totals.scannedSports ?? '—' }}</strong>
+          </div>
+          <div>
+            <small>Requests restantes</small>
+            <strong>{{ result()!.usage.requestsRemaining ?? '—' }}</strong>
+          </div>
+        </div>
+      </div>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Pick</th>
-                <th>Momio</th>
-                <th>Modelo</th>
-                <th>Imp.</th>
-                <th>Fair</th>
-                <th>Edge</th>
-                <th>EV</th>
-                <th>Stake</th>
-                <th>Decisión</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let row of result()!.outcomes" [class.best]="result()!.bestOutcome?.label === row.label">
-                <td>{{ row.label }}</td>
-                <td>{{ row.oddsDecimal.toFixed(2) }}</td>
-                <td>{{ percent(row.modelProbability) }}</td>
-                <td>{{ percent(row.impliedProbabilityRaw) }}</td>
-                <td>{{ row.fairOdds === null ? '—' : row.fairOdds.toFixed(2) }}</td>
-                <td [class.positive]="row.edgeRaw > 0" [class.negative]="row.edgeRaw < 0">{{ signedPercent(row.edgeRaw) }}</td>
-                <td [class.positive]="row.expectedValuePerUnit > 0" [class.negative]="row.expectedValuePerUnit < 0">{{ row.expectedValuePerUnit.toFixed(3) }}</td>
-                <td>{{ money(row.stakeSuggested) }}</td>
-                <td><span class="mini-badge" [class.good]="row.decision === 'single_viable'" [class.warn]="row.decision === 'watch'" [class.bad]="row.decision === 'no_bet'">{{ decisionLabel(row.decision) }}</span></td>
-              </tr>
-            </tbody>
-          </table>
+      <div class="top-candidate" *ngIf="topCandidate() as top">
+        <div>
+          <p class="eyebrow">Top candidate</p>
+          <h3>{{ top.eventName }}</h3>
+          <p>{{ top.selection }} · {{ marketLabel(top) }} · mejor momio {{ top.bestOddsDecimal.toFixed(2) }} en {{ top.bestBookmaker }}</p>
+        </div>
+        <strong class="score-pill">Score {{ top.score.toFixed(2) }}</strong>
+      </div>
+
+      <div class="catalog-box" *ngIf="scannedSports().length">
+        <div class="catalog-header">
+          <strong>Catálogo descubierto</strong>
+          <span>{{ scannedSports().length }} fuentes consultadas</span>
         </div>
 
-        <div class="why" *ngIf="result()!.bestOutcome">
-          <h3>Por qué importa</h3>
-          <ul>
-            <li *ngFor="let reason of result()!.bestOutcome!.reasons">{{ reason }}</li>
-          </ul>
+        <div class="sport-chips">
+          <div class="sport-chip" *ngFor="let sport of scannedSports()" [ngClass]="sportStatusClass(sport.status)">
+            <strong>{{ sport.title }}</strong>
+            <span>{{ sport.marketsRequested }} · {{ sport.eventsReturned }} eventos</span>
+          </div>
         </div>
-      </ng-container>
+      </div>
 
-      <ng-template #emptyState>
-        <div class="empty">
-          <div class="orb"></div>
-          <h3>Listo para analizar</h3>
-          <p>Primero importa mercados reales. Luego manda moneyline al motor y ajusta probabilidades cuando tengamos modelo.</p>
-        </div>
-      </ng-template>
-    </section>
+      <div class="warning-box" *ngIf="result()!.warnings.length">
+        <strong>Notas del scanner</strong>
+        <p *ngFor="let warning of result()!.warnings.slice(0, 6)">{{ warning }}</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Score</th>
+              <th>Deporte</th>
+              <th>Evento</th>
+              <th>Hora</th>
+              <th>Mercado</th>
+              <th>Selección</th>
+              <th>Mejor momio</th>
+              <th>Casa</th>
+              <th>Promedio</th>
+              <th>Casas</th>
+              <th>Spread precio</th>
+              <th>Hold</th>
+              <th>Recomendación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of result()!.candidates; let i = index" [class.best]="i === 0">
+              <td><strong>{{ row.score.toFixed(2) }}</strong></td>
+              <td>{{ row.sportKey }}</td>
+              <td>{{ row.eventName }}</td>
+              <td>{{ localDate(row.commenceTime) }}</td>
+              <td>{{ marketLabel(row) }}</td>
+              <td>{{ row.selection }}</td>
+              <td>{{ row.bestOddsDecimal.toFixed(2) }}</td>
+              <td>{{ row.bestBookmaker }}</td>
+              <td>{{ row.averageOddsDecimal.toFixed(2) }}</td>
+              <td>{{ row.bookmakerCount }}</td>
+              <td class="positive">{{ percent(row.priceSpreadPct) }}</td>
+              <td>{{ percent(row.bestBookmakerHoldPct) }}</td>
+              <td><span class="mini-badge good">{{ recommendationLabel(row.recommendation) }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="why" *ngIf="topCandidate() as topReason">
+        <h3>Por qué salió arriba</h3>
+        <ul>
+          <li *ngFor="let reason of topReason.reasons">{{ reason }}</li>
+        </ul>
+      </div>
+    </ng-container>
+
+    <ng-template #emptyState>
+      <div class="empty">
+        <div class="orb"></div>
+        <h3>Listo para escanear</h3>
+        <p>Ingresa bankroll y deja que el sistema consulte deportes, eventos y mercados por API.</p>
+      </div>
+    </ng-template>
   </section>
 </main>
