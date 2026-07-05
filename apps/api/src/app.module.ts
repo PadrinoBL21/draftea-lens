@@ -18,6 +18,7 @@ import { BacktestDashboardModule } from './backtest-dashboard/backtest-dashboard
 import { ResultIntakeModule } from './result-intake/result-intake.module';
 import { LabelingPipelineModule } from './labeling-pipeline/labeling-pipeline.module';
 import { TrainingDatasetExportModule } from './training-dataset-export/training-dataset-export.module';
+import { MlBaselineV2Module } from './ml-baseline-v2/ml-baseline-v2.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { TrainingDatasetExportModule } from './training-dataset-export/training-
     ResultIntakeModule,
     LabelingPipelineModule,
     TrainingDatasetExportModule,
+    MlBaselineV2Module,
   ],
   controllers: [HealthController],
 })

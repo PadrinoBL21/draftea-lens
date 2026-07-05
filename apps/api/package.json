@@ -17,7 +17,8 @@
     "qa:dashboard": "node test/qa-backtest-dashboard.mjs",
     "qa:result-intake": "node test/qa-result-intake.mjs",
     "qa:labeling": "node test/qa-labeling-pipeline.mjs",
-    "qa:training-dataset": "node test/qa-training-dataset-export.mjs"
+    "qa:training-dataset": "node test/qa-training-dataset-export.mjs",
+    "qa:ml-baseline-v2": "node test/qa-ml-baseline-v2.mjs"
   },
   "dependencies": {
     "@draftea-lens/core": "file:../../packages/core",

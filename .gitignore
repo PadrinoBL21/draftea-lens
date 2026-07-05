@@ -72,3 +72,7 @@ data/labeling-pipeline/
 # Local training dataset export runtime data
 apps/api/data/training-dataset-export/
 data/training-dataset-export/
+
+# Local ML baseline v2 runtime data
+apps/api/data/ml-baseline-v2/
+data/ml-baseline-v2/
