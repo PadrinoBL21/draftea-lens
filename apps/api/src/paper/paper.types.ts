@@ -7,6 +7,17 @@ export type PaperPickType =
 
 export type PaperPickStatus = 'open' | 'settled' | 'void';
 
+export type PaperSettlementResult = 'win' | 'loss' | 'push' | 'void' | 'half_win' | 'half_loss';
+
+export interface PaperPickSettlement {
+  settledAt: string;
+  result: PaperSettlementResult;
+  closingOdds?: number;
+  closingLineValue?: number;
+  paperProfitLoss: number;
+  notes?: string;
+}
+
 export interface PaperPick {
   paperPickId: string;
   scanId: string;
@@ -38,14 +49,7 @@ export interface PaperPick {
   learningEligible: boolean;
   reasons: string[];
   featuresSnapshot: AutoScanCandidate;
-  settlement?: {
-    settledAt: string;
-    result: 'win' | 'loss' | 'push' | 'void' | 'half_win' | 'half_loss';
-    closingOdds?: number;
-    closingLineValue?: number;
-    paperProfitLoss: number;
-    notes?: string;
-  };
+  settlement?: PaperPickSettlement;
 }
 
 export interface PaperScanRecord {
@@ -73,4 +77,20 @@ export interface PaperScanAndSaveResult {
     recommendation: 'paper_picks_saved' | 'paper_watch_only';
     message: string;
   };
+}
+
+export interface SettlementSummary {
+  totalPicks: number;
+  openPicks: number;
+  settledPicks: number;
+  voidPicks: number;
+  wins: number;
+  losses: number;
+  pushes: number;
+  halfWins: number;
+  halfLosses: number;
+  totalPaperStake: number;
+  totalPaperProfitLoss: number;
+  roiPct: number;
+  averageClosingLineValue: number | null;
 }

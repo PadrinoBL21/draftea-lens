@@ -1,11 +1,19 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { mkdir, readFile, readdir, writeFile, appendFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { ScannerService } from '../scanner/scanner.service';
 import { AutoScanCandidate, AutoScanResult } from '../scanner/scanner.types';
 import { ScanAndSaveDto } from './dto/scan-and-save.dto';
-import { PaperPick, PaperPickType, PaperScanAndSaveResult, PaperScanRecord } from './paper.types';
+import { SettlePaperPickDto } from './dto/settle-paper-pick.dto';
+import {
+  PaperPick,
+  PaperPickSettlement,
+  PaperPickType,
+  PaperScanAndSaveResult,
+  PaperScanRecord,
+  SettlementSummary,
+} from './paper.types';
 
 const MODEL_VERSION = 'consensus-ev-v0.1';
 const DATA_DIR = join(process.cwd(), 'data', 'paper-ledger');
@@ -95,17 +103,84 @@ export class PaperService {
   }
 
   async listLatestPicks(limit = 25): Promise<PaperPick[]> {
-    await this.ensureStorage();
-    if (!existsSync(PICKS_JSONL)) return [];
+    const picks = await this.readAllPicks();
+    return picks.slice(-Math.max(1, Math.min(limit, 200))).reverse();
+  }
 
-    const raw = await readFile(PICKS_JSONL, 'utf-8');
-    return raw
-      .split('\n')
-      .map((line) => line.trim())
-      .filter(Boolean)
+  async listOpenPicks(limit = 25): Promise<PaperPick[]> {
+    const picks = await this.readAllPicks();
+    return picks
+      .filter((pick) => pick.status === 'open')
       .slice(-Math.max(1, Math.min(limit, 200)))
-      .reverse()
-      .map((line) => JSON.parse(line) as PaperPick);
+      .reverse();
+  }
+
+  async listSettledPicks(limit = 25): Promise<PaperPick[]> {
+    const picks = await this.readAllPicks();
+    return picks
+      .filter((pick) => pick.status === 'settled' || pick.status === 'void')
+      .slice(-Math.max(1, Math.min(limit, 200)))
+      .reverse();
+  }
+
+  async settlePick(dto: SettlePaperPickDto): Promise<PaperPick> {
+    await this.ensureStorage();
+
+    const picks = await this.readAllPicks();
+    const index = picks.findIndex((pick) => pick.paperPickId === dto.paperPickId);
+    if (index === -1) {
+      throw new NotFoundException(`Paper pick not found: ${dto.paperPickId}`);
+    }
+
+    const pick = picks[index];
+    if (pick.status !== 'open') {
+      throw new BadRequestException(`Paper pick ${dto.paperPickId} is already ${pick.status}.`);
+    }
+
+    const settlement = this.buildSettlement(pick, dto);
+    const settledPick: PaperPick = {
+      ...pick,
+      status: dto.result === 'void' ? 'void' : 'settled',
+      settlement,
+    };
+
+    picks[index] = settledPick;
+    await this.writeAllPicks(picks);
+    await this.updateScanRecord(settledPick);
+
+    return settledPick;
+  }
+
+  async settlementSummary(): Promise<SettlementSummary> {
+    const picks = await this.readAllPicks();
+    const settled = picks.filter((pick) => pick.status === 'settled' || pick.status === 'void');
+    const nonVoidSettled = settled.filter((pick) => pick.status !== 'void');
+    const totalPaperStake = this.round(nonVoidSettled.reduce((sum, pick) => sum + pick.paperStake, 0), 2);
+    const totalPaperProfitLoss = this.round(
+      settled.reduce((sum, pick) => sum + (pick.settlement?.paperProfitLoss ?? 0), 0),
+      2,
+    );
+
+    const clvValues = settled
+      .map((pick) => pick.settlement?.closingLineValue)
+      .filter((value): value is number => typeof value === 'number' && Number.isFinite(value));
+
+    return {
+      totalPicks: picks.length,
+      openPicks: picks.filter((pick) => pick.status === 'open').length,
+      settledPicks: picks.filter((pick) => pick.status === 'settled').length,
+      voidPicks: picks.filter((pick) => pick.status === 'void').length,
+      wins: settled.filter((pick) => pick.settlement?.result === 'win').length,
+      losses: settled.filter((pick) => pick.settlement?.result === 'loss').length,
+      pushes: settled.filter((pick) => pick.settlement?.result === 'push').length,
+      halfWins: settled.filter((pick) => pick.settlement?.result === 'half_win').length,
+      halfLosses: settled.filter((pick) => pick.settlement?.result === 'half_loss').length,
+      totalPaperStake,
+      totalPaperProfitLoss,
+      roiPct: totalPaperStake > 0 ? this.round(totalPaperProfitLoss / totalPaperStake, 4) : 0,
+      averageClosingLineValue:
+        clvValues.length > 0 ? this.round(clvValues.reduce((sum, value) => sum + value, 0) / clvValues.length, 4) : null,
+    };
   }
 
   private buildPaperPicks(
@@ -179,6 +254,79 @@ export class PaperService {
     const liquidity = Math.min(candidate.bookmakerCount, 10) * 0.25;
     const marketQuality = candidate.bestBookmakerHoldPct === null ? 0 : Math.max(0, 0.07 - candidate.bestBookmakerHoldPct) * 50;
     return ev + edge + liquidity + marketQuality + candidate.score * 0.05;
+  }
+
+  private buildSettlement(pick: PaperPick, dto: SettlePaperPickDto): PaperPickSettlement {
+    const paperProfitLoss = this.calculatePaperProfitLoss(pick.paperStake, pick.bestOddsDecimal, dto.result);
+    const closingLineValue =
+      typeof dto.closingLineValue === 'number'
+        ? this.round(dto.closingLineValue, 4)
+        : typeof dto.closingOdds === 'number'
+          ? this.calculateClosingLineValue(pick.bestOddsDecimal, dto.closingOdds)
+          : undefined;
+
+    return {
+      settledAt: new Date().toISOString(),
+      result: dto.result,
+      closingOdds: dto.closingOdds,
+      closingLineValue,
+      paperProfitLoss,
+      notes: dto.notes,
+    };
+  }
+
+  private calculatePaperProfitLoss(stake: number, oddsDecimal: number, result: SettlePaperPickDto['result']): number {
+    switch (result) {
+      case 'win':
+        return this.round(stake * (oddsDecimal - 1), 2);
+      case 'loss':
+        return this.round(-stake, 2);
+      case 'push':
+      case 'void':
+        return 0;
+      case 'half_win':
+        return this.round((stake * (oddsDecimal - 1)) / 2, 2);
+      case 'half_loss':
+        return this.round(-stake / 2, 2);
+      default:
+        return 0;
+    }
+  }
+
+  private calculateClosingLineValue(pickOddsDecimal: number, closingOddsDecimal: number): number {
+    if (!Number.isFinite(closingOddsDecimal) || closingOddsDecimal <= 1) return 0;
+    return this.round(pickOddsDecimal / closingOddsDecimal - 1, 4);
+  }
+
+  private async readAllPicks(): Promise<PaperPick[]> {
+    await this.ensureStorage();
+    if (!existsSync(PICKS_JSONL)) return [];
+
+    const raw = await readFile(PICKS_JSONL, 'utf-8');
+    return raw
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => JSON.parse(line) as PaperPick);
+  }
+
+  private async writeAllPicks(picks: PaperPick[]): Promise<void> {
+    await this.ensureStorage();
+    const content = picks.map((pick) => JSON.stringify(pick)).join('\n');
+    await writeFile(PICKS_JSONL, content ? `${content}\n` : '', 'utf-8');
+  }
+
+  private async updateScanRecord(settledPick: PaperPick): Promise<void> {
+    const scanPath = join(SCANS_DIR, `${settledPick.scanId}.json`);
+    if (!existsSync(scanPath)) return;
+
+    const raw = await readFile(scanPath, 'utf-8');
+    const record = JSON.parse(raw) as PaperScanRecord;
+    record.paperPicks = record.paperPicks.map((pick) =>
+      pick.paperPickId === settledPick.paperPickId ? settledPick : pick,
+    );
+
+    await writeFile(scanPath, `${JSON.stringify(record, null, 2)}\n`, 'utf-8');
   }
 
   private async ensureStorage(): Promise<void> {
