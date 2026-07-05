@@ -64,3 +64,7 @@ data/data-collection-scheduler/
 # Local result intake runtime data
 apps/api/data/result-intake/
 data/result-intake/
+
+# Local labeling pipeline runtime data
+apps/api/data/labeling-pipeline/
+data/labeling-pipeline/
