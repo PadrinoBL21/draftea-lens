@@ -1,13 +1,15 @@
-node_modules
+node_modules/
+dist/
 .env
-.env.*
-dist
-coverage
 .DS_Store
-npm-debug.log*
-.angular/
-apps/web/.angular/
-**/.angular/cache/s
 .angular/
 apps/web/.angular/
 **/.angular/cache/
+data/paper-ledger/*.jsonl
+data/paper-ledger/scans/*.json
+
+# Local paper betting ledger data
+apps/api/data/paper-ledger/*.json
+apps/api/data/paper-ledger/scans/*.json
+data/paper-ledger/*.json
+data/paper-ledger/scans/*.json
