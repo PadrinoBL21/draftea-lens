@@ -37,6 +37,37 @@ const requiredPaperPickFields = [
   'featuresSnapshot',
 ];
 
+const requiredOddsLineFields = [
+  'lineId',
+  'snapshotId',
+  'capturedAt',
+  'modelVersion',
+  'source',
+  'eventId',
+  'eventName',
+  'commenceTime',
+  'sportKey',
+  'marketKey',
+  'marketType',
+  'selection',
+  'bestOddsDecimal',
+  'bestBookmaker',
+  'worstOddsDecimal',
+  'averageOddsDecimal',
+  'impliedProbabilityBest',
+  'consensusImpliedProbability',
+  'consensusProbability',
+  'fairOddsConsensus',
+  'edgeVsConsensus',
+  'expectedValuePerUnit',
+  'bookmakerCount',
+  'priceSpreadPct',
+  'marketHoldPct',
+  'scannerScore',
+  'scannerRecommendation',
+  'featuresSnapshot',
+];
+
 const allowedTypes = new Set(['learning_probe', 'value_paper_pick', 'shadow_reference_pick']);
 const allowedStatuses = new Set(['open', 'settled', 'void']);
 const allowedSettlementResults = new Set(['win', 'loss', 'push', 'void', 'half_win', 'half_loss']);
@@ -52,13 +83,13 @@ function assertNumber(value, fieldName, { min = Number.NEGATIVE_INFINITY } = {})
   assert(value >= min, `${fieldName} must be >= ${min}`);
 }
 
-function readFixture(fileName) {
+function readValueArrayFixture(fileName, itemName) {
   const fixturePath = join(__dirname, 'fixtures', fileName);
   const payload = JSON.parse(readFileSync(fixturePath, 'utf8'));
-  const picks = Array.isArray(payload) ? payload : payload.value;
-  assert(Array.isArray(picks), `${fileName} must contain an array of paper picks or a value array`);
-  assert(picks.length > 0, `${fileName} must include at least one paper pick`);
-  return picks;
+  const values = Array.isArray(payload) ? payload : payload.value;
+  assert(Array.isArray(values), `${fileName} must contain an array or a value array`);
+  assert(values.length > 0, `${fileName} must include at least one ${itemName}`);
+  return values;
 }
 
 function validatePaperPick(pick, index, fixtureName) {
@@ -113,10 +144,45 @@ function validateSettlement(pick, index, fixtureName) {
   }
 }
 
-const openPicks = readFixture('paper-picks.sample.json');
+function validateOddsLine(line, index, fixtureName) {
+  for (const field of requiredOddsLineFields) {
+    assert(Object.prototype.hasOwnProperty.call(line, field), `${fixtureName} line[${index}] missing field: ${field}`);
+  }
+
+  assert(line.modelVersion.startsWith('odds-history-'), `${fixtureName} line[${index}].modelVersion must be versioned`);
+  assert(line.source === 'smart_scan_consensus_ev', `${fixtureName} line[${index}].source is invalid`);
+  assert(typeof line.lineId === 'string' && line.lineId.length > 0, `${fixtureName} line[${index}].lineId required`);
+  assert(typeof line.snapshotId === 'string' && line.snapshotId.length > 0, `${fixtureName} line[${index}].snapshotId required`);
+  assertNumber(line.bestOddsDecimal, `${fixtureName} line[${index}].bestOddsDecimal`, { min: 1.01 });
+  assertNumber(line.worstOddsDecimal, `${fixtureName} line[${index}].worstOddsDecimal`, { min: 1.01 });
+  assertNumber(line.averageOddsDecimal, `${fixtureName} line[${index}].averageOddsDecimal`, { min: 1.01 });
+  assertNumber(line.impliedProbabilityBest, `${fixtureName} line[${index}].impliedProbabilityBest`, { min: 0 });
+  assert(line.impliedProbabilityBest <= 1, `${fixtureName} line[${index}].impliedProbabilityBest must be <= 1`);
+  assertNumber(line.consensusProbability, `${fixtureName} line[${index}].consensusProbability`, { min: 0 });
+  assert(line.consensusProbability <= 1, `${fixtureName} line[${index}].consensusProbability must be <= 1`);
+  assertNumber(line.expectedValuePerUnit, `${fixtureName} line[${index}].expectedValuePerUnit`);
+  assertNumber(line.bookmakerCount, `${fixtureName} line[${index}].bookmakerCount`, { min: 1 });
+  assertNumber(line.priceSpreadPct, `${fixtureName} line[${index}].priceSpreadPct`, { min: 0 });
+  assert(typeof line.featuresSnapshot === 'object' && line.featuresSnapshot !== null, `${fixtureName} line[${index}].featuresSnapshot required`);
+}
+
+const openPicks = readValueArrayFixture('paper-picks.sample.json', 'paper pick');
 openPicks.forEach((pick, index) => validatePaperPick(pick, index, 'paper-picks.sample.json'));
 
-const settledPicks = readFixture('settled-picks.sample.json');
+const settledPicks = readValueArrayFixture('settled-picks.sample.json', 'settled paper pick');
 settledPicks.forEach((pick, index) => validatePaperPick(pick, index, 'settled-picks.sample.json'));
 
-console.log(`QA fixtures passed: ${openPicks.length} open paper pick(s), ${settledPicks.length} settled paper pick(s) validated.`);
+const oddsLines = readValueArrayFixture('odds-history-lines.sample.json', 'odds line');
+oddsLines.forEach((line, index) => validateOddsLine(line, index, 'odds-history-lines.sample.json'));
+
+const repeatedLineIds = new Set();
+for (const line of oddsLines) {
+  if (oddsLines.filter((candidate) => candidate.lineId === line.lineId).length > 1) {
+    repeatedLineIds.add(line.lineId);
+  }
+}
+assert(repeatedLineIds.size > 0, 'odds-history-lines.sample.json must include at least one repeated lineId to test movement history');
+
+console.log(
+  `QA fixtures passed: ${openPicks.length} open paper pick(s), ${settledPicks.length} settled paper pick(s), ${oddsLines.length} odds line observation(s) validated.`,
+);

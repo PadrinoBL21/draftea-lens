@@ -20,3 +20,7 @@ apps/api/data/paper-ledger/**/*.jsonl
 # Local paper betting ledger runtime data
 apps/api/data/paper-ledger/
 data/paper-ledger/
+
+# Local odds history runtime data
+apps/api/data/odds-history/
+data/odds-history/

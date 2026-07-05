@@ -5,9 +5,10 @@ import { MarketsModule } from './markets/markets.module';
 import { SourcesModule } from './sources/sources.module';
 import { ScannerModule } from './scanner/scanner.module';
 import { PaperModule } from './paper/paper.module';
+import { OddsHistoryModule } from './odds-history/odds-history.module';
 
 @Module({
-  imports: [MoneylineModule, MarketsModule, SourcesModule, ScannerModule, PaperModule],
+  imports: [MoneylineModule, MarketsModule, SourcesModule, ScannerModule, PaperModule, OddsHistoryModule],
   controllers: [HealthController],
 })
 export class AppModule {}
