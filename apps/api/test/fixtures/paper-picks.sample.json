@@ -1,0 +1,49 @@
+{
+  "value": [
+    {
+      "paperPickId": "paper_1_test",
+      "scanId": "scan_test_001",
+      "generatedAt": "2026-07-05T00:26:02.620Z",
+      "modelVersion": "consensus-ev-v0.1",
+      "source": "smart_scan_consensus_ev",
+      "type": "learning_probe",
+      "status": "open",
+      "eventId": "190922affd0be754bfefd71548dbf90d",
+      "eventName": "Egypt vs Argentina",
+      "commenceTime": "2026-07-07T16:00:00Z",
+      "sportKey": "soccer_fifa_world_cup",
+      "marketKey": "h2h",
+      "marketType": "moneyline",
+      "selection": "Egypt",
+      "bestOddsDecimal": 10,
+      "bestBookmaker": "BetRivers",
+      "averageOddsDecimal": 9.225,
+      "consensusProbability": 0.1036,
+      "fairOddsConsensus": 9.653,
+      "edgeVsConsensus": 0.0036,
+      "expectedValuePerUnit": 0.036,
+      "kellyFractional": 0.001,
+      "scannerScore": 19.9,
+      "scannerRecommendation": "price_shopping_candidate",
+      "paperStake": 1.25,
+      "realStakeSuggested": 0,
+      "learningEligible": true,
+      "reasons": [
+        "Paper-only pick saved for learning. Real stake remains gated by recommendation quality."
+      ],
+      "featuresSnapshot": {
+        "eventId": "190922affd0be754bfefd71548dbf90d",
+        "eventName": "Egypt vs Argentina",
+        "sportKey": "soccer_fifa_world_cup",
+        "marketKey": "h2h",
+        "marketType": "moneyline",
+        "selection": "Egypt",
+        "bestOddsDecimal": 10,
+        "consensusProbability": 0.1036,
+        "expectedValuePerUnit": 0.036,
+        "stakeSuggested": 1.25
+      }
+    }
+  ],
+  "Count": 1
+}

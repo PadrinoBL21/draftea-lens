@@ -22,6 +22,6 @@ test('analyzeMoneyline returns no_bet for weak edges', () => {
     ],
   });
 
-  assert.equal(result.summary.recommendation, 'watch');
+  assert.equal(result.summary.recommendation, 'no_bet');
   assert.equal(result.outcomes.length, 3);
 });

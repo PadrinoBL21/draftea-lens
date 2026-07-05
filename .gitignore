@@ -13,3 +13,10 @@ apps/api/data/paper-ledger/*.json
 apps/api/data/paper-ledger/scans/*.json
 data/paper-ledger/*.json
 data/paper-ledger/scans/*.json
+
+apps/api/data/paper-ledger/*.jsonl
+apps/api/data/paper-ledger/**/*.jsonl
+
+# Local paper betting ledger runtime data
+apps/api/data/paper-ledger/
+data/paper-ledger/
