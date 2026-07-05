@@ -1,0 +1,37 @@
+{
+  "predictionId": "ml_prediction_20260705014500_sample1",
+  "generatedAt": "2026-07-05T01:45:00.000Z",
+  "modelVersion": "ml-baseline-v0.1",
+  "modelId": "ml_baseline_20260705014500_sample1",
+  "modelStatus": "trained",
+  "featureVectorId": "paper_pick__sample1",
+  "source": "paper_pick",
+  "sourceId": "paper_sample1",
+  "eventId": "event_sample1",
+  "eventName": "Fixture FC vs QA United",
+  "commenceTime": "2026-07-05T20:00:00.000Z",
+  "sportKey": "soccer_fixture",
+  "marketKey": "h2h",
+  "marketType": "moneyline",
+  "selection": "Fixture FC",
+  "bestOddsDecimal": 2.1,
+  "scannerRecommendation": "price_shopping_candidate",
+  "expectedValuePerUnit": 0.04,
+  "scannerScore": 14.2,
+  "trend": "shortening",
+  "predictedWinProbability": 0.56,
+  "breakEvenProbability": 0.4762,
+  "predictedEdge": 0.0838,
+  "predictedExpectedValuePerUnit": 0.176,
+  "decision": "watch",
+  "realStakeSuggested": 0,
+  "reasons": [
+    "Predicted win probability: 56.00%.",
+    "Prediction is paper-only."
+  ],
+  "featureSnapshot": {
+    "expectedValuePerUnit": 0.04,
+    "scannerScore": 14.2,
+    "trend": "shortening"
+  }
+}

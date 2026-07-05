@@ -1,0 +1,71 @@
+{
+  "modelId": "ml_baseline_20260705014500_sample1",
+  "trainedAt": "2026-07-05T01:45:00.000Z",
+  "modelVersion": "ml-baseline-v0.1",
+  "status": "trained",
+  "filters": {
+    "source": "paper_pick",
+    "minTrainingRows": 2,
+    "maxRows": 10000,
+    "epochs": 200,
+    "learningRate": 0.05,
+    "validationSplit": 0.2
+  },
+  "featureNames": [
+    "logBestOdds",
+    "consensusProbability",
+    "edgeVsConsensus",
+    "expectedValuePerUnit",
+    "scannerScore",
+    "priceSpreadPct",
+    "marketHoldPct",
+    "lineObservationCount",
+    "oddsChangePct",
+    "impliedProbabilityChange",
+    "consensusProbabilityChange",
+    "expectedValueChange",
+    "sourcePaperPick",
+    "trendShortening",
+    "trendDrifting",
+    "recommendationValueCandidate"
+  ],
+  "trainingRows": 8,
+  "validationRows": 2,
+  "positiveLabels": 5,
+  "negativeLabels": 5,
+  "intercept": 0.1025,
+  "weights": {
+    "logBestOdds": -0.04,
+    "consensusProbability": 0.2,
+    "edgeVsConsensus": 0.3,
+    "expectedValuePerUnit": 0.45,
+    "scannerScore": 0.15,
+    "priceSpreadPct": -0.03,
+    "marketHoldPct": -0.12,
+    "lineObservationCount": 0.02,
+    "oddsChangePct": -0.08,
+    "impliedProbabilityChange": 0.04,
+    "consensusProbabilityChange": 0.05,
+    "expectedValueChange": 0.1,
+    "sourcePaperPick": 0.01,
+    "trendShortening": 0.06,
+    "trendDrifting": -0.06,
+    "recommendationValueCandidate": 0.18
+  },
+  "featureMeans": {},
+  "featureStdDevs": {},
+  "metrics": {
+    "accuracyPct": 60,
+    "logLoss": 0.681,
+    "brierScore": 0.241,
+    "averagePredictedWinProbability": 0.52
+  },
+  "notes": [
+    "Fixture model for QA only."
+  ],
+  "saved": {
+    "modelsPath": "data/ml-baseline/models.jsonl",
+    "latestModelPath": "data/ml-baseline/latest-model.json",
+    "predictionsPath": "data/ml-baseline/predictions.jsonl"
+  }
+}

@@ -32,3 +32,7 @@ data/feature-store/
 # Local backtesting runtime data
 apps/api/data/backtesting/
 data/backtesting/
+
+# Local ML baseline runtime data
+apps/api/data/ml-baseline/
+data/ml-baseline/
