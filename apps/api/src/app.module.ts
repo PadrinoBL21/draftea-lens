@@ -14,6 +14,7 @@ import { DataQualityModule } from './data-quality/data-quality.module';
 import { ContinuousCollectorModule } from './continuous-collector/continuous-collector.module';
 import { SettlementAssistantModule } from './settlement-assistant/settlement-assistant.module';
 import { DataCollectionSchedulerModule } from './data-collection-scheduler/data-collection-scheduler.module';
+import { BacktestDashboardModule } from './backtest-dashboard/backtest-dashboard.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { DataCollectionSchedulerModule } from './data-collection-scheduler/data-
     ContinuousCollectorModule,
     SettlementAssistantModule,
     DataCollectionSchedulerModule,
+    BacktestDashboardModule,
   ],
   controllers: [HealthController],
 })

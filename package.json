@@ -12,6 +12,6 @@
     "test:core": "npm --workspace packages/core run test",
     "lint": "echo \"lint pending\"",
     "qa:fixtures": "npm --workspace apps/api run qa:fixtures",
-    "qa": "npm run test:core && npm run qa:fixtures && npm --workspace apps/api run qa:backtesting && npm --workspace apps/api run qa:ml-baseline && npm --workspace apps/api run qa:model-governance && npm --workspace apps/api run qa:data-quality && npm --workspace apps/api run qa:collector && npm --workspace apps/api run qa:settlement-assistant && npm --workspace apps/api run qa:scheduler"
+    "qa": "npm run test:core && npm run qa:fixtures && npm --workspace apps/api run qa:backtesting && npm --workspace apps/api run qa:ml-baseline && npm --workspace apps/api run qa:model-governance && npm --workspace apps/api run qa:data-quality && npm --workspace apps/api run qa:collector && npm --workspace apps/api run qa:settlement-assistant && npm --workspace apps/api run qa:scheduler && npm --workspace apps/api run qa:dashboard"
   }
 }

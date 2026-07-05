@@ -1,0 +1,48 @@
+{
+  "dashboardVersion": "backtest-dashboard-v0.1",
+  "generatedAt": "2026-07-05T02:45:00.000Z",
+  "readiness": "collecting_data",
+  "cards": [
+    {
+      "label": "Data readiness",
+      "value": "collecting_data",
+      "status": "blocked",
+      "detail": "4 blocker(s) remain."
+    }
+  ],
+  "counts": {
+    "paperPicks": 4,
+    "settledPicks": 0,
+    "labelableRows": 0,
+    "featureVectors": 47,
+    "oddsLineObservations": 120,
+    "lineMovementObservations": 79,
+    "backtestEligibleRows": 1,
+    "mlTrainingRows": 0
+  },
+  "champion": {
+    "modelId": "consensus-ev-v0.1",
+    "modelType": "rules_engine",
+    "status": "active"
+  },
+  "latestMlModel": {
+    "modelId": "ml_baseline_sample",
+    "status": "insufficient_data"
+  },
+  "latestBacktest": {
+    "runId": "backtest_sample",
+    "eligibleRows": 1,
+    "roiPct": 0
+  },
+  "latestCollectorRun": {
+    "runId": "collector_sample",
+    "status": "completed_with_warnings"
+  },
+  "latestSchedulerRun": null,
+  "dataQuality": {
+    "readiness": "collecting_data"
+  },
+  "recommendations": [
+    "Settle more paper picks with real outcomes before training models."
+  ]
+}
