@@ -1,0 +1,104 @@
+{
+  "auditId": "data_quality_audit_20260705t021000000z_sample1",
+  "auditedAt": "2026-07-05T02:10:00.000Z",
+  "dataQualityVersion": "data-quality-v0.1",
+  "readiness": "collecting_data",
+  "thresholds": {
+    "minPaperPicks": 50,
+    "minSettledPicks": 50,
+    "minLabelableRows": 100,
+    "minFeatureVectors": 100,
+    "minOddsLineObservations": 250,
+    "minLineMovementObservations": 50,
+    "minBacktestEligibleRows": 100,
+    "minPositiveLabels": 25,
+    "minNegativeLabels": 25,
+    "minTrackedSports": 1,
+    "minTrackedMarketTypes": 2,
+    "maxVoidRatePct": 30,
+    "minNeuralTrainingRows": 1000,
+    "minNeuralSettledPicks": 500
+  },
+  "counts": {
+    "paperPicks": {
+      "total": 2,
+      "open": 1,
+      "settled": 0,
+      "void": 1,
+      "win": 0,
+      "loss": 0,
+      "push": 0,
+      "halfWin": 0,
+      "halfLoss": 0,
+      "labelable": 0,
+      "positiveLabels": 0,
+      "negativeLabels": 0,
+      "duplicateIds": 0,
+      "missingSettlement": 0,
+      "malformedRows": 0,
+      "voidRatePct": 100
+    },
+    "oddsHistory": {
+      "totalLineObservations": 40,
+      "uniqueLines": 40,
+      "lineMovementObservations": 0,
+      "trackedSports": 1,
+      "trackedEvents": 6,
+      "trackedMarketTypes": 3,
+      "malformedRows": 0
+    },
+    "featureStore": {
+      "totalFeatureVectors": 2,
+      "paperPickVectors": 2,
+      "oddsLineVectors": 0,
+      "outcomeKnownVectors": 1,
+      "labelableVectors": 0,
+      "positiveLabels": 0,
+      "negativeLabels": 0,
+      "incompleteVectors": 0,
+      "duplicateIds": 0,
+      "malformedRows": 0
+    },
+    "backtesting": {
+      "latestRunId": "backtest_20260705014518_39xvbe",
+      "latestEligibleRows": 1,
+      "latestRoiPct": 0,
+      "latestMaxDrawdown": 0,
+      "latestAverageClosingLineValue": 0,
+      "hasLatestRun": true
+    },
+    "mlBaseline": {
+      "latestModelId": "ml_baseline_20260705t015434257z_u93006",
+      "latestStatus": "insufficient_data",
+      "latestTrainingRows": 0,
+      "latestValidationRows": 0,
+      "positiveLabels": 0,
+      "negativeLabels": 0,
+      "hasLatestModel": true
+    }
+  },
+  "checks": [
+    {
+      "name": "paper_picks_total",
+      "status": "warn",
+      "actual": 2,
+      "required": 50,
+      "message": "Collect enough paper picks before trusting aggregate metrics."
+    },
+    {
+      "name": "duplicate_paper_pick_ids",
+      "status": "pass",
+      "actual": 0,
+      "required": 0,
+      "message": "duplicate_paper_pick_ids passed."
+    }
+  ],
+  "blockers": [],
+  "warnings": [
+    "Collect enough paper picks before trusting aggregate metrics."
+  ],
+  "recommendations": [
+    "Settle more paper picks with real outcomes before training models.",
+    "Keep Champion model active. Do not promote ML or neural models while data quality checks fail."
+  ]
+}

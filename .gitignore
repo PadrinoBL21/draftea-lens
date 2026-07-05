@@ -40,3 +40,7 @@ data/ml-baseline/
 # Local model governance runtime data
 apps/api/data/model-governance/
 data/model-governance/
+
+# Local data quality runtime data
+apps/api/data/data-quality/
+data/data-quality/
