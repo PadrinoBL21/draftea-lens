@@ -8,7 +8,8 @@
     "build": "nest build",
     "qa:fixtures": "node test/qa-fixtures.mjs",
     "qa:backtesting": "node test/qa-backtesting.mjs",
-    "qa:ml-baseline": "node test/qa-ml-baseline.mjs"
+    "qa:ml-baseline": "node test/qa-ml-baseline.mjs",
+    "qa:model-governance": "node test/qa-model-governance.mjs"
   },
   "dependencies": {
     "@draftea-lens/core": "file:../../packages/core",

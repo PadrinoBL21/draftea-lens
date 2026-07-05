@@ -36,3 +36,7 @@ data/backtesting/
 # Local ML baseline runtime data
 apps/api/data/ml-baseline/
 data/ml-baseline/
+
+# Local model governance runtime data
+apps/api/data/model-governance/
+data/model-governance/

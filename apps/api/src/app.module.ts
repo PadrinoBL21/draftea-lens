@@ -9,6 +9,7 @@ import { OddsHistoryModule } from './odds-history/odds-history.module';
 import { FeatureStoreModule } from './feature-store/feature-store.module';
 import { BacktestingModule } from './backtesting/backtesting.module';
 import { MlBaselineModule } from './ml-baseline/ml-baseline.module';
+import { ModelGovernanceModule } from './model-governance/model-governance.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { MlBaselineModule } from './ml-baseline/ml-baseline.module';
     FeatureStoreModule,
     BacktestingModule,
     MlBaselineModule,
+    ModelGovernanceModule,
   ],
   controllers: [HealthController],
 })

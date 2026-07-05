@@ -1,0 +1,67 @@
+{
+  "evaluationId": "governance_eval_20260705t020000000z_sample1",
+  "evaluatedAt": "2026-07-05T02:00:00.000Z",
+  "governanceVersion": "model-governance-v0.1",
+  "champion": {
+    "modelId": "consensus-ev-v0.1",
+    "modelVersion": "consensus-ev-v0.1",
+    "modelType": "rules_engine",
+    "status": "active",
+    "promotedAt": null,
+    "promotionSourceEvaluationId": null,
+    "notes": [
+      "Default champion is the deterministic Consensus EV rules engine.",
+      "ML models start as challengers and cannot replace champion without governance checks."
+    ]
+  },
+  "challenger": {
+    "modelId": "ml_baseline_20260705t015434257z_u93006",
+    "modelVersion": "ml-baseline-v0.1",
+    "modelType": "ml_baseline",
+    "trainedAt": "2026-07-05T01:54:34.257Z",
+    "status": "insufficient_data",
+    "trainingRows": 0,
+    "validationRows": 0,
+    "positiveLabels": 0,
+    "negativeLabels": 0,
+    "metrics": {
+      "accuracyPct": null,
+      "logLoss": null,
+      "brierScore": null,
+      "averagePredictedWinProbability": null
+    }
+  },
+  "latestBacktest": {
+    "runId": "backtest_20260705013000_sample1",
+    "generatedAt": "2026-07-05T01:30:00.000Z",
+    "eligibleRows": 1,
+    "profitLoss": 0,
+    "roiPct": 0,
+    "hitRatePct": 0,
+    "averageClosingLineValue": 0,
+    "maxDrawdown": 0
+  },
+  "thresholds": {
+    "requireLatestBacktest": true,
+    "minTrainingRows": 100,
+    "minValidationRows": 20,
+    "minBacktestRows": 100,
+    "minRoiPct": 0,
+    "minAccuracyPct": null,
+    "maxDrawdown": null,
+    "maxBrierScore": null
+  },
+  "status": "blocked_insufficient_data",
+  "promotable": false,
+  "failedChecks": [
+    "Challenger status is insufficient_data, not trained.",
+    "Training rows 0 below required 100.",
+    "Validation rows 0 below required 20.",
+    "Backtest eligible rows 1 below required 100."
+  ],
+  "recommendation": "keep_champion",
+  "notes": [
+    "Champion remains active.",
+    "Challenger cannot be promoted until failed checks are resolved."
+  ]
+}

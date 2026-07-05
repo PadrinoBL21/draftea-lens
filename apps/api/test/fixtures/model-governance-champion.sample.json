@@ -1,0 +1,12 @@
+{
+  "modelId": "consensus-ev-v0.1",
+  "modelVersion": "consensus-ev-v0.1",
+  "modelType": "rules_engine",
+  "status": "active",
+  "promotedAt": null,
+  "promotionSourceEvaluationId": null,
+  "notes": [
+    "Default champion is the deterministic Consensus EV rules engine.",
+    "ML models start as challengers and cannot replace champion without governance checks."
+  ]
+}
