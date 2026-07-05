@@ -1,0 +1,78 @@
+{
+  "exportId": "training_dataset_export_20260705032000_sample1",
+  "exportedAt": "2026-07-05T03:20:00.000Z",
+  "datasetVersion": "training-dataset-export-v0.1",
+  "filters": {
+    "format": "both",
+    "eligibleOnly": true,
+    "includeMetadata": true,
+    "minExpectedValue": -10,
+    "maxRows": 50000
+  },
+  "sourceLabels": 3,
+  "rowsExported": 2,
+  "trainingEligibleRows": 2,
+  "positiveLabels": 1,
+  "negativeLabels": 1,
+  "neutralRows": 0,
+  "excludedRows": 0,
+  "uniqueSports": 1,
+  "uniqueMarketTypes": 1,
+  "readyForTraining": false,
+  "sample": [
+    {
+      "datasetRowId": "dataset_row__training_dataset_export_20260705032000_sample1__label_paper_alpha",
+      "exportedAt": "2026-07-05T03:20:00.000Z",
+      "datasetVersion": "training-dataset-export-v0.1",
+      "labelWin": 1,
+      "labelWeight": 1,
+      "features": {
+        "logBestOdds": 1.2,
+        "consensusProbability": 0.34,
+        "edgeVsConsensus": 0.03,
+        "expectedValuePerUnit": 0.05,
+        "scannerScore": 22,
+        "priceSpreadPct": 0.08,
+        "marketHoldPct": 0.04,
+        "lineObservationCount": 5,
+        "oddsChangePct": 0.01,
+        "impliedProbabilityChange": -0.002,
+        "consensusProbabilityChange": 0.001,
+        "expectedValueChange": 0.002,
+        "sourcePaperPick": 1,
+        "trendShortening": 0,
+        "trendDrifting": 1,
+        "recommendationValueCandidate": 1
+      },
+      "metadata": {
+        "labelId": "label_paper_alpha",
+        "featureVectorId": "paper_pick_alpha",
+        "source": "paper_pick",
+        "sourceId": "paper_alpha",
+        "eventId": "event_alpha",
+        "eventName": "Alpha vs Beta",
+        "commenceTime": "2026-07-05T20:00:00Z",
+        "sportKey": "soccer_fifa_world_cup",
+        "marketKey": "h2h",
+        "marketType": "moneyline",
+        "selection": "Alpha",
+        "settlementResult": "win",
+        "outcomeClass": "positive",
+        "exclusionReason": null,
+        "bestOddsDecimal": 3.32,
+        "breakEvenProbability": 0.3012,
+        "expectedValuePerUnit": 0.05,
+        "scannerScore": 22,
+        "trend": "drifting",
+        "labelProfitLoss": 2.32,
+        "labelClosingLineValue": 0.01
+      }
+    }
+  ],
+  "saved": {
+    "exportsPath": "./data/training-dataset-export/exports.jsonl",
+    "latestExportPath": "./data/training-dataset-export/latest-export.json",
+    "jsonlPath": "./data/training-dataset-export/training_dataset_export_20260705032000_sample1.jsonl",
+    "csvPath": "./data/training-dataset-export/training_dataset_export_20260705032000_sample1.csv"
+  }
+}

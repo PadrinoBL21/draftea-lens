@@ -68,3 +68,7 @@ data/result-intake/
 # Local labeling pipeline runtime data
 apps/api/data/labeling-pipeline/
 data/labeling-pipeline/
+
+# Local training dataset export runtime data
+apps/api/data/training-dataset-export/
+data/training-dataset-export/

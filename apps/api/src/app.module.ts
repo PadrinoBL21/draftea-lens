@@ -17,6 +17,7 @@ import { DataCollectionSchedulerModule } from './data-collection-scheduler/data-
 import { BacktestDashboardModule } from './backtest-dashboard/backtest-dashboard.module';
 import { ResultIntakeModule } from './result-intake/result-intake.module';
 import { LabelingPipelineModule } from './labeling-pipeline/labeling-pipeline.module';
+import { TrainingDatasetExportModule } from './training-dataset-export/training-dataset-export.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { LabelingPipelineModule } from './labeling-pipeline/labeling-pipeline.mo
     BacktestDashboardModule,
     ResultIntakeModule,
     LabelingPipelineModule,
+    TrainingDatasetExportModule,
   ],
   controllers: [HealthController],
 })
