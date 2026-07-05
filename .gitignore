@@ -56,3 +56,7 @@ data/settlement-assistant/
 # Local settlement assistant runtime data
 apps/api/data/settlement-assistant/
 data/settlement-assistant/
+
+# Local data collection scheduler runtime data
+apps/api/data/data-collection-scheduler/
+data/data-collection-scheduler/

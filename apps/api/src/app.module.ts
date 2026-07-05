@@ -13,6 +13,7 @@ import { ModelGovernanceModule } from './model-governance/model-governance.modul
 import { DataQualityModule } from './data-quality/data-quality.module';
 import { ContinuousCollectorModule } from './continuous-collector/continuous-collector.module';
 import { SettlementAssistantModule } from './settlement-assistant/settlement-assistant.module';
+import { DataCollectionSchedulerModule } from './data-collection-scheduler/data-collection-scheduler.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { SettlementAssistantModule } from './settlement-assistant/settlement-ass
     DataQualityModule,
     ContinuousCollectorModule,
     SettlementAssistantModule,
+    DataCollectionSchedulerModule,
   ],
   controllers: [HealthController],
 })

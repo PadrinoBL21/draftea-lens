@@ -1,0 +1,35 @@
+{
+  "runId": "scheduler_run_20260705t024500000z_sample1",
+  "triggeredAt": "2026-07-05T02:45:00.000Z",
+  "finishedAt": "2026-07-05T02:45:05.000Z",
+  "schedulerVersion": "data-collection-scheduler-v0.1",
+  "trigger": "manual",
+  "status": "success",
+  "config": {
+    "bankroll": 1250,
+    "intervalMinutes": 60,
+    "runLabel": "manual-scheduler-smoke",
+    "enablePaperPicks": true,
+    "maxPaperPicks": 10,
+    "enableOddsSnapshot": true,
+    "maxLines": 200,
+    "rebuildFeatureStore": true,
+    "maxFeatureVectors": 5000,
+    "auditDataQuality": true,
+    "persistDataQualityAudit": true
+  },
+  "collectorRunId": "collector_run_20260705t024500000z_sample1",
+  "collectorStatus": "completed_with_warnings",
+  "dataQualityReadiness": "collecting_data",
+  "paperPicksSaved": 2,
+  "oddsLinesSaved": 40,
+  "featureVectorsBuilt": 47,
+  "blockerCount": 4,
+  "warningCount": 6,
+  "message": "Collector finished with status completed_with_warnings.",
+  "saved": {
+    "runsPath": "./data/data-collection-scheduler/runs.jsonl",
+    "latestRunPath": "./data/data-collection-scheduler/latest-run.json",
+    "statePath": "./data/data-collection-scheduler/state.json"
+  }
+}
