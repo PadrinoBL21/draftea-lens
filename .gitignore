@@ -48,3 +48,11 @@ data/data-quality/
 # Local continuous collector runtime data
 apps/api/data/continuous-collector/
 data/continuous-collector/
+
+# Local settlement assistant runtime data
+apps/api/data/settlement-assistant/
+data/settlement-assistant/
+
+# Local settlement assistant runtime data
+apps/api/data/settlement-assistant/
+data/settlement-assistant/

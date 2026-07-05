@@ -12,6 +12,7 @@ import { MlBaselineModule } from './ml-baseline/ml-baseline.module';
 import { ModelGovernanceModule } from './model-governance/model-governance.module';
 import { DataQualityModule } from './data-quality/data-quality.module';
 import { ContinuousCollectorModule } from './continuous-collector/continuous-collector.module';
+import { SettlementAssistantModule } from './settlement-assistant/settlement-assistant.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ContinuousCollectorModule } from './continuous-collector/continuous-col
     ModelGovernanceModule,
     DataQualityModule,
     ContinuousCollectorModule,
+    SettlementAssistantModule,
   ],
   controllers: [HealthController],
 })

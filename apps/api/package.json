@@ -11,7 +11,8 @@
     "qa:ml-baseline": "node test/qa-ml-baseline.mjs",
     "qa:model-governance": "node test/qa-model-governance.mjs",
     "qa:data-quality": "node test/qa-data-quality.mjs",
-    "qa:collector": "node test/qa-continuous-collector.mjs"
+    "qa:collector": "node test/qa-continuous-collector.mjs",
+    "qa:settlement-assistant": "node test/qa-settlement-assistant.mjs"
   },
   "dependencies": {
     "@draftea-lens/core": "file:../../packages/core",

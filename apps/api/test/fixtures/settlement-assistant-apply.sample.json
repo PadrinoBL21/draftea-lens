@@ -1,0 +1,36 @@
+{
+  "runId": "settlement_assistant_run_20260705t024500000z_sample1",
+  "appliedAt": "2026-07-05T02:45:00.000Z",
+  "assistantVersion": "settlement-assistant-v0.1",
+  "status": "completed",
+  "requested": 1,
+  "settled": 1,
+  "failed": 0,
+  "results": [
+    {
+      "paperPickId": "paper_sample_due",
+      "status": "settled",
+      "result": "win",
+      "settledPick": {
+        "paperPickId": "paper_sample_due",
+        "status": "settled",
+        "settlement": {
+          "result": "win",
+          "paperProfitLoss": 1.1
+        }
+      }
+    }
+  ],
+  "postSettlement": {
+    "featureRebuildId": "feature_rebuild_sample",
+    "featureVectorsBuilt": 12,
+    "dataQualityAuditId": "data_quality_audit_sample",
+    "dataQualityReadiness": "collecting_data",
+    "blockerCount": 3,
+    "warningCount": 5
+  },
+  "saved": {
+    "runsPath": "data/settlement-assistant/runs.jsonl",
+    "latestRunPath": "data/settlement-assistant/latest-run.json"
+  }
+}

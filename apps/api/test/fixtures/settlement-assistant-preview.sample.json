@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-07-05T02:45:00.000Z",
+  "assistantVersion": "settlement-assistant-v0.1",
+  "settleAfterHours": 2.5,
+  "staleAfterHours": 72,
+  "totalOpenPicks": 2,
+  "dueCount": 1,
+  "upcomingCount": 1,
+  "staleCount": 0,
+  "candidates": [
+    {
+      "paperPickId": "paper_sample_due",
+      "scanId": "scan_sample",
+      "eventId": "event_sample_due",
+      "eventName": "Sample A vs Sample B",
+      "commenceTime": "2026-07-04T20:00:00.000Z",
+      "sportKey": "soccer_fifa_world_cup",
+      "marketKey": "h2h",
+      "marketType": "moneyline",
+      "selection": "Sample A",
+      "bestOddsDecimal": 2.1,
+      "bestBookmaker": "SampleBook",
+      "paperStake": 1,
+      "expectedValuePerUnit": 0.02,
+      "scannerScore": 12.5,
+      "scannerRecommendation": "price_shopping_candidate",
+      "generatedAt": "2026-07-04T18:00:00.000Z",
+      "hoursUntilCommence": -6.75,
+      "hoursSinceCommence": 6.75,
+      "status": "due",
+      "recommendation": "manual_result_required",
+      "allowedResults": ["win", "loss", "push", "void", "half_win", "half_loss"],
+      "suggestedNotes": "Enter the real market result manually. Do not guess; use official final result/settlement from the book.",
+      "originalPick": {
+        "paperPickId": "paper_sample_due",
+        "status": "open"
+      }
+    }
+  ]
+}
