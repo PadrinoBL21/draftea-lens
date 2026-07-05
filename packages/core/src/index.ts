@@ -4,3 +4,4 @@ export * from './market-types';
 export * from './market-importer';
 export * from './external-odds-types';
 export * from './external-odds-normalizer';
+export * from './consensus-ev';

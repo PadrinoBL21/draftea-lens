@@ -1,7 +1,9 @@
 export type ScannerRecommendation =
+  | 'value_candidate'
   | 'price_shopping_candidate'
   | 'clean_market_candidate'
   | 'watch'
+  | 'no_bet'
   | 'skip';
 
 export interface OddsApiUsage {
@@ -25,6 +27,12 @@ export interface AutoScanCandidate {
   averageOddsDecimal: number;
   impliedProbabilityBest: number;
   consensusImpliedProbability: number;
+  consensusProbability: number;
+  fairOddsConsensus: number | null;
+  edgeVsConsensus: number;
+  expectedValuePerUnit: number;
+  kellyFull: number;
+  kellyFractional: number;
   bookmakerCount: number;
   priceSpreadPct: number;
   bestBookmakerHoldPct: number | null;
@@ -36,7 +44,7 @@ export interface AutoScanCandidate {
 
 export interface AutoScanResult {
   scanner: 'auto_scanner_v0_1' | 'smart_catalog_scanner_v0_1';
-  mode: 'market_intelligence_no_model_ev';
+  mode: 'market_intelligence_no_model_ev' | 'market_intelligence_consensus_ev';
   scannedAt: string;
   query: {
     bankroll: number;
@@ -58,6 +66,8 @@ export interface AutoScanResult {
     returned: number;
     scannedSports?: number;
     activeSports?: number;
+    valueCandidates?: number;
+    watchCandidates?: number;
   };
   catalog?: {
     source: 'the-odds-api';

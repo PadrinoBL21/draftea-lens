@@ -1,9 +1,9 @@
 <main class="shell">
   <section class="hero">
     <div>
-      <p class="eyebrow">LEGO 8 · Smart Scanner Web Final</p>
+      <p class="eyebrow">LEGO 9 · Consensus EV Layer</p>
       <h1>Draftea Lens</h1>
-      <p class="subtitle">Ingresa bankroll. El sistema descubre deportes, prioriza Mundial, consulta mercados válidos y ordena oportunidades reales.</p>
+      <p class="subtitle">Ingresa bankroll. El sistema descubre deportes, prioriza Mundial, calcula EV por consenso de mercado y sugiere stake conservador.</p>
     </div>
 
     <div class="status-card">
@@ -19,8 +19,8 @@
     <div class="panel-header">
       <div>
         <p class="eyebrow">Modo usuario</p>
-        <h2>Smart Scan</h2>
-        <p class="panel-copy">Sin deporte, sin mercado, sin bookmaker. La API arma el catálogo por dentro y evita mercados inválidos.</p>
+        <h2>Smart Scan + Consensus EV</h2>
+        <p class="panel-copy">Sin deporte, sin mercado, sin bookmaker. La API arma el catálogo y calcula EV usando probabilidad consenso sin vig.</p>
       </div>
       <span class="badge good">Solo bankroll</span>
     </div>
@@ -32,7 +32,7 @@
       </label>
 
       <button class="primary" type="submit" [disabled]="loading()">
-        {{ loading() ? 'Escaneando mercados reales...' : 'Escanear oportunidades' }}
+        {{ loading() ? 'Calculando EV por consenso...' : 'Escanear oportunidades' }}
       </button>
     </form>
 
@@ -57,25 +57,34 @@
 
         <div class="summary-card">
           <div>
-            <small>Deportes activos</small>
-            <strong>{{ result()!.totals.activeSports ?? '—' }}</strong>
+            <small>Value</small>
+            <strong>{{ result()!.totals.valueCandidates ?? 0 }}</strong>
           </div>
           <div>
-            <small>Escaneados</small>
-            <strong>{{ result()!.totals.scannedSports ?? '—' }}</strong>
+            <small>Watch</small>
+            <strong>{{ result()!.totals.watchCandidates ?? 0 }}</strong>
           </div>
           <div>
-            <small>Requests restantes</small>
+            <small>Requests</small>
             <strong>{{ result()!.usage.requestsRemaining ?? '—' }}</strong>
           </div>
         </div>
+      </div>
+
+      <div class="ev-strip">
+        <div>
+          <p class="eyebrow">Consensus EV activo</p>
+          <h3>El scanner ya calcula probabilidad consenso, fair odds, EV y stake capado</h3>
+          <p>Esta capa usa el mercado como modelo base. Todavía no es red neuronal ni predicción propia entrenada.</p>
+        </div>
+        <span class="badge value">EV conservador</span>
       </div>
 
       <div class="worldcup-strip" *ngIf="worldCupSports().length">
         <div>
           <p class="eyebrow">Mundial detectado</p>
           <h3>FIFA World Cup está dentro del escaneo</h3>
-          <p>El scanner priorizó los mercados de partido y separó futuros/outrights cuando están disponibles.</p>
+          <p>El scanner priorizó mercados de partido y separó futuros/outrights cuando están disponibles.</p>
         </div>
         <div class="worldcup-sports">
           <span *ngFor="let sport of worldCupSports()">{{ sport.title }} · {{ sport.marketsRequested }} · {{ sport.eventsReturned }} eventos</span>
@@ -87,6 +96,7 @@
           <p class="eyebrow">Top candidate</p>
           <h3>{{ top.eventName }}</h3>
           <p>{{ sportLabel(top.sportKey) }} · {{ top.selection }} · {{ marketLabel(top) }} · mejor momio {{ top.bestOddsDecimal.toFixed(2) }} en {{ top.bestBookmaker }}</p>
+          <p class="ev-line">EV {{ percent(top.expectedValuePerUnit) }} · Consenso {{ percent(top.consensusProbability) }} · Stake {{ money(top.stakeSuggested) }}</p>
         </div>
         <strong class="score-pill">Score {{ top.score.toFixed(2) }}</strong>
       </div>
@@ -106,10 +116,12 @@
               <div>
                 <strong>{{ candidate.eventName }}</strong>
                 <small>{{ sportLabel(candidate.sportKey) }} · {{ marketLabel(candidate) }} · {{ candidate.selection }}</small>
+                <small>EV {{ percent(candidate.expectedValuePerUnit) }} · Fair {{ candidate.fairOddsConsensus ?? '—' }}</small>
               </div>
               <div class="bucket-odds">
                 <strong>{{ candidate.bestOddsDecimal.toFixed(2) }}</strong>
                 <small>{{ candidate.bestBookmaker }}</small>
+                <small>Stake {{ money(candidate.stakeSuggested) }}</small>
               </div>
             </div>
           </div>
@@ -138,7 +150,7 @@
       <div class="table-title">
         <div>
           <p class="eyebrow">Todas las oportunidades</p>
-          <h3>Market intelligence</h3>
+          <h3>Market intelligence + consensus EV</h3>
         </div>
         <span class="badge">{{ result()!.candidates.length }} candidatos</span>
       </div>
@@ -155,7 +167,11 @@
               <th>Selección</th>
               <th>Mejor momio</th>
               <th>Casa</th>
-              <th>Promedio</th>
+              <th>Consenso</th>
+              <th>Fair</th>
+              <th>EV</th>
+              <th>Edge</th>
+              <th>Stake</th>
               <th>Casas</th>
               <th>Spread precio</th>
               <th>Hold</th>
@@ -163,7 +179,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let row of result()!.candidates; let i = index" [class.best]="i === 0" [class.worldcup-row]="row.sportKey.includes('world_cup')">
+            <tr *ngFor="let row of result()!.candidates; let i = index" [class.best]="i === 0" [class.worldcup-row]="row.sportKey.includes('world_cup')" [class.value-row]="row.recommendation === 'value_candidate'">
               <td><strong>{{ row.score.toFixed(2) }}</strong></td>
               <td>{{ sportLabel(row.sportKey) }}</td>
               <td>{{ row.eventName }}</td>
@@ -172,11 +188,15 @@
               <td>{{ row.selection }}</td>
               <td>{{ row.bestOddsDecimal.toFixed(2) }}</td>
               <td>{{ row.bestBookmaker }}</td>
-              <td>{{ row.averageOddsDecimal.toFixed(2) }}</td>
+              <td>{{ percent(row.consensusProbability) }}</td>
+              <td>{{ row.fairOddsConsensus ?? '—' }}</td>
+              <td [class.positive]="row.expectedValuePerUnit > 0" [class.negative]="row.expectedValuePerUnit < 0">{{ percent(row.expectedValuePerUnit) }}</td>
+              <td [class.positive]="row.edgeVsConsensus > 0" [class.negative]="row.edgeVsConsensus < 0">{{ percent(row.edgeVsConsensus) }}</td>
+              <td><strong>{{ money(row.stakeSuggested) }}</strong></td>
               <td>{{ row.bookmakerCount }}</td>
               <td class="positive">{{ percent(row.priceSpreadPct) }}</td>
               <td>{{ percent(row.bestBookmakerHoldPct) }}</td>
-              <td><span class="mini-badge good">{{ recommendationLabel(row.recommendation) }}</span></td>
+              <td><span class="mini-badge" [ngClass]="recommendationClass(row.recommendation)">{{ recommendationLabel(row.recommendation) }}</span></td>
             </tr>
           </tbody>
         </table>
@@ -194,7 +214,7 @@
       <div class="empty">
         <div class="orb"></div>
         <h3>Listo para escanear</h3>
-        <p>Ingresa bankroll y deja que el sistema consulte deportes, eventos y mercados por API.</p>
+        <p>Ingresa bankroll y deja que el sistema consulte deportes, eventos, mercados y EV por consenso.</p>
       </div>
     </ng-template>
   </section>
