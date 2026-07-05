@@ -68,9 +68,48 @@ const requiredOddsLineFields = [
   'featuresSnapshot',
 ];
 
+const requiredFeatureVectorFields = [
+  'featureVectorId',
+  'createdAt',
+  'featureStoreVersion',
+  'source',
+  'sourceId',
+  'eventId',
+  'eventName',
+  'commenceTime',
+  'sportKey',
+  'marketKey',
+  'marketType',
+  'selection',
+  'bestOddsDecimal',
+  'averageOddsDecimal',
+  'consensusProbability',
+  'fairOddsConsensus',
+  'edgeVsConsensus',
+  'expectedValuePerUnit',
+  'bookmakerCount',
+  'priceSpreadPct',
+  'marketHoldPct',
+  'scannerScore',
+  'scannerRecommendation',
+  'lineId',
+  'lineObservationCount',
+  'oddsChangePct',
+  'impliedProbabilityChange',
+  'consensusProbabilityChange',
+  'expectedValueChange',
+  'trend',
+  'outcomeKnown',
+  'labelWin',
+  'labelProfitLoss',
+  'labelClosingLineValue',
+];
+
 const allowedTypes = new Set(['learning_probe', 'value_paper_pick', 'shadow_reference_pick']);
 const allowedStatuses = new Set(['open', 'settled', 'void']);
 const allowedSettlementResults = new Set(['win', 'loss', 'push', 'void', 'half_win', 'half_loss']);
+const allowedFeatureSources = new Set(['paper_pick', 'odds_line']);
+const allowedTrends = new Set(['shortening', 'drifting', 'flat', 'unknown']);
 
 function assert(condition, message) {
   if (!condition) {
@@ -166,6 +205,38 @@ function validateOddsLine(line, index, fixtureName) {
   assert(typeof line.featuresSnapshot === 'object' && line.featuresSnapshot !== null, `${fixtureName} line[${index}].featuresSnapshot required`);
 }
 
+function validateFeatureVector(vector, index, fixtureName) {
+  for (const field of requiredFeatureVectorFields) {
+    assert(Object.prototype.hasOwnProperty.call(vector, field), `${fixtureName} vector[${index}] missing field: ${field}`);
+  }
+
+  assert(vector.featureStoreVersion.startsWith('feature-store-'), `${fixtureName} vector[${index}].featureStoreVersion must be versioned`);
+  assert(allowedFeatureSources.has(vector.source), `${fixtureName} vector[${index}].source is invalid`);
+  assert(allowedTrends.has(vector.trend), `${fixtureName} vector[${index}].trend is invalid`);
+  assert(typeof vector.featureVectorId === 'string' && vector.featureVectorId.length > 0, `${fixtureName} vector[${index}].featureVectorId required`);
+  assertNumber(vector.bestOddsDecimal, `${fixtureName} vector[${index}].bestOddsDecimal`, { min: 1.01 });
+  assertNumber(vector.averageOddsDecimal, `${fixtureName} vector[${index}].averageOddsDecimal`, { min: 1.01 });
+  assertNumber(vector.consensusProbability, `${fixtureName} vector[${index}].consensusProbability`, { min: 0 });
+  assert(vector.consensusProbability <= 1, `${fixtureName} vector[${index}].consensusProbability must be <= 1`);
+  assertNumber(vector.expectedValuePerUnit, `${fixtureName} vector[${index}].expectedValuePerUnit`);
+  assertNumber(vector.bookmakerCount, `${fixtureName} vector[${index}].bookmakerCount`, { min: 1 });
+  assertNumber(vector.priceSpreadPct, `${fixtureName} vector[${index}].priceSpreadPct`, { min: 0 });
+  assertNumber(vector.lineObservationCount, `${fixtureName} vector[${index}].lineObservationCount`, { min: 0 });
+  assertNumber(vector.oddsChangePct, `${fixtureName} vector[${index}].oddsChangePct`);
+  assertNumber(vector.expectedValueChange, `${fixtureName} vector[${index}].expectedValueChange`);
+  assert(typeof vector.outcomeKnown === 'boolean', `${fixtureName} vector[${index}].outcomeKnown must be boolean`);
+
+  if (vector.source === 'paper_pick') {
+    assert(typeof vector.paperPickId === 'string' && vector.paperPickId.length > 0, `${fixtureName} vector[${index}].paperPickId required`);
+    assertNumber(vector.paperStake, `${fixtureName} vector[${index}].paperStake`, { min: 0 });
+    assertNumber(vector.realStakeSuggested, `${fixtureName} vector[${index}].realStakeSuggested`, { min: 0 });
+  }
+
+  if (vector.outcomeKnown) {
+    assert(vector.labelProfitLoss !== null, `${fixtureName} vector[${index}] outcome-known vector must carry P/L label`);
+  }
+}
+
 const openPicks = readValueArrayFixture('paper-picks.sample.json', 'paper pick');
 openPicks.forEach((pick, index) => validatePaperPick(pick, index, 'paper-picks.sample.json'));
 
@@ -183,6 +254,11 @@ for (const line of oddsLines) {
 }
 assert(repeatedLineIds.size > 0, 'odds-history-lines.sample.json must include at least one repeated lineId to test movement history');
 
+const featureVectors = readValueArrayFixture('feature-store-vectors.sample.json', 'feature vector');
+featureVectors.forEach((vector, index) => validateFeatureVector(vector, index, 'feature-store-vectors.sample.json'));
+assert(featureVectors.some((vector) => vector.source === 'paper_pick'), 'feature-store fixture must include a paper_pick vector');
+assert(featureVectors.some((vector) => vector.source === 'odds_line'), 'feature-store fixture must include an odds_line vector');
+
 console.log(
-  `QA fixtures passed: ${openPicks.length} open paper pick(s), ${settledPicks.length} settled paper pick(s), ${oddsLines.length} odds line observation(s) validated.`,
+  `QA fixtures passed: ${openPicks.length} open paper pick(s), ${settledPicks.length} settled paper pick(s), ${oddsLines.length} odds line observation(s), ${featureVectors.length} feature vector(s) validated.`,
 );

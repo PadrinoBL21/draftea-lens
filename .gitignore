@@ -24,3 +24,7 @@ data/paper-ledger/
 # Local odds history runtime data
 apps/api/data/odds-history/
 data/odds-history/
+
+# Local feature store runtime data
+apps/api/data/feature-store/
+data/feature-store/
