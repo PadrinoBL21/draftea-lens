@@ -14,7 +14,8 @@
     "qa:collector": "node test/qa-continuous-collector.mjs",
     "qa:settlement-assistant": "node test/qa-settlement-assistant.mjs",
     "qa:scheduler": "node test/qa-data-collection-scheduler.mjs",
-    "qa:dashboard": "node test/qa-backtest-dashboard.mjs"
+    "qa:dashboard": "node test/qa-backtest-dashboard.mjs",
+    "qa:result-intake": "node test/qa-result-intake.mjs"
   },
   "dependencies": {
     "@draftea-lens/core": "file:../../packages/core",

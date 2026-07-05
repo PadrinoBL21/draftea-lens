@@ -1,0 +1,44 @@
+{
+  "matchRunId": "result_match_run_20260705t030000000z_sample1",
+  "generatedAt": "2026-07-05T03:00:00.000Z",
+  "resultIntakeVersion": "result-intake-v0.1",
+  "totalOpenPicks": 1,
+  "matched": 1,
+  "highConfidence": 1,
+  "mediumConfidence": 0,
+  "manualReview": 0,
+  "noResult": 0,
+  "candidates": [
+    {
+      "matchId": "result_match_paper_sample_1",
+      "paperPickId": "paper_sample_1",
+      "eventId": "event_sample_1",
+      "eventName": "Alpha vs Beta",
+      "commenceTime": "2026-07-05T00:00:00.000Z",
+      "sportKey": "soccer_sample",
+      "marketKey": "h2h",
+      "marketType": "moneyline",
+      "selection": "Alpha",
+      "bestOddsDecimal": 2.1,
+      "status": "matched_high_confidence",
+      "result": {
+        "resultId": "official_result_sample_1",
+        "importedAt": "2026-07-05T03:00:00.000Z",
+        "resultIntakeVersion": "result-intake-v0.1",
+        "sourceName": "manual-official-result",
+        "eventId": "event_sample_1",
+        "eventName": "Alpha vs Beta",
+        "status": "final",
+        "homeTeam": "Alpha",
+        "awayTeam": "Beta",
+        "homeScore": 2,
+        "awayScore": 1
+      },
+      "suggestedSettlement": {
+        "result": "win",
+        "confidence": "high",
+        "reason": "Moneyline settled from final score 2-1."
+      }
+    }
+  ]
+}

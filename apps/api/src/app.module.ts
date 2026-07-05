@@ -15,6 +15,7 @@ import { ContinuousCollectorModule } from './continuous-collector/continuous-col
 import { SettlementAssistantModule } from './settlement-assistant/settlement-assistant.module';
 import { DataCollectionSchedulerModule } from './data-collection-scheduler/data-collection-scheduler.module';
 import { BacktestDashboardModule } from './backtest-dashboard/backtest-dashboard.module';
+import { ResultIntakeModule } from './result-intake/result-intake.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { BacktestDashboardModule } from './backtest-dashboard/backtest-dashboard
     SettlementAssistantModule,
     DataCollectionSchedulerModule,
     BacktestDashboardModule,
+    ResultIntakeModule,
   ],
   controllers: [HealthController],
 })
