@@ -3,6 +3,8 @@ import { HttpClient } from "@angular/common/http";
 import { Component, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
+import { DashboardPanelComponent } from './dashboard/dashboard-panel.component';
+
 type ScannerRecommendation =
   | "value_candidate"
   | "price_shopping_candidate"
@@ -109,7 +111,7 @@ type CandidateBucket = {
 @Component({
   selector: "app-root",
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DashboardPanelComponent],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.css",
 })

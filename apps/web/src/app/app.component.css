@@ -590,3 +590,10 @@ tr.best.worldcup-row {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Dashboard Web UI */
+.dashboard-web-ui-section {
+  margin: 0 auto 1.5rem;
+  max-width: 1440px;
+}
