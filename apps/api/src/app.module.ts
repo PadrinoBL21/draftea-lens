@@ -7,6 +7,7 @@ import { ScannerModule } from './scanner/scanner.module';
 import { PaperModule } from './paper/paper.module';
 import { OddsHistoryModule } from './odds-history/odds-history.module';
 import { FeatureStoreModule } from './feature-store/feature-store.module';
+import { BacktestingModule } from './backtesting/backtesting.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { FeatureStoreModule } from './feature-store/feature-store.module';
     PaperModule,
     OddsHistoryModule,
     FeatureStoreModule,
+    BacktestingModule,
   ],
   controllers: [HealthController],
 })

@@ -28,3 +28,7 @@ data/odds-history/
 # Local feature store runtime data
 apps/api/data/feature-store/
 data/feature-store/
+
+# Local backtesting runtime data
+apps/api/data/backtesting/
+data/backtesting/

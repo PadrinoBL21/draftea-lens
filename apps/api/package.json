@@ -6,7 +6,8 @@
     "start": "node dist/main.js",
     "start:dev": "nest start --watch",
     "build": "nest build",
-    "qa:fixtures": "node test/qa-fixtures.mjs"
+    "qa:fixtures": "node test/qa-fixtures.mjs",
+    "qa:backtesting": "node test/qa-backtesting.mjs"
   },
   "dependencies": {
     "@draftea-lens/core": "file:../../packages/core",

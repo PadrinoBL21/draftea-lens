@@ -1,0 +1,93 @@
+{
+  "runId": "backtest_20260705013000_sample1",
+  "generatedAt": "2026-07-05T01:30:00.000Z",
+  "backtestVersion": "backtesting-v0.1",
+  "filters": {
+    "source": "paper_pick",
+    "trend": "all",
+    "outcomeKnownOnly": true,
+    "minExpectedValue": 0,
+    "minScannerScore": 0,
+    "stakingMode": "flat",
+    "flatStake": 1,
+    "maxRows": 10000
+  },
+  "rowsConsidered": 2,
+  "eligibleRows": 2,
+  "skippedRows": 0,
+  "wins": 1,
+  "losses": 1,
+  "pushes": 0,
+  "voids": 0,
+  "halfWins": 0,
+  "halfLosses": 0,
+  "totalStake": 2,
+  "profitLoss": 2.7,
+  "roiPct": 135,
+  "hitRatePct": 50,
+  "averageOddsDecimal": 3.35,
+  "averageExpectedValue": 0.0215,
+  "averageClosingLineValue": 0.02,
+  "maxDrawdown": -1,
+  "byMarketType": {
+    "moneyline": {
+      "count": 2,
+      "wins": 1,
+      "losses": 1,
+      "pushes": 0,
+      "voids": 0,
+      "halfWins": 0,
+      "halfLosses": 0,
+      "totalStake": 2,
+      "profitLoss": 2.7,
+      "roiPct": 135,
+      "hitRatePct": 50,
+      "averageExpectedValue": 0.0215,
+      "averageClosingLineValue": 0.02
+    }
+  },
+  "bySport": {
+    "soccer_fifa_world_cup": {
+      "count": 2,
+      "wins": 1,
+      "losses": 1,
+      "pushes": 0,
+      "voids": 0,
+      "halfWins": 0,
+      "halfLosses": 0,
+      "totalStake": 2,
+      "profitLoss": 2.7,
+      "roiPct": 135,
+      "hitRatePct": 50,
+      "averageExpectedValue": 0.0215,
+      "averageClosingLineValue": 0.02
+    }
+  },
+  "sampleTrades": [
+    {
+      "featureVectorId": "paper_pick__sample_win",
+      "source": "paper_pick",
+      "sourceId": "paper_sample_win",
+      "eventId": "event_sample_1",
+      "eventName": "Sample A vs Sample B",
+      "commenceTime": "2026-07-05T20:00:00Z",
+      "sportKey": "soccer_fifa_world_cup",
+      "marketKey": "h2h",
+      "marketType": "moneyline",
+      "selection": "Sample A",
+      "oddsDecimal": 4.7,
+      "expectedValuePerUnit": 0.0143,
+      "scannerScore": 14.2,
+      "trend": "flat",
+      "settlementResult": "win",
+      "simulatedStake": 1,
+      "simulatedProfitLoss": 3.7,
+      "bankrollAfter": 3.7,
+      "closingLineValue": 0.03
+    }
+  ],
+  "saved": {
+    "reportsPath": "./data/backtesting/backtest-runs.jsonl",
+    "latestRunPath": "./data/backtesting/latest-run.json"
+  }
+}
