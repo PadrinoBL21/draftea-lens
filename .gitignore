@@ -44,3 +44,7 @@ data/model-governance/
 # Local data quality runtime data
 apps/api/data/data-quality/
 data/data-quality/
+
+# Local continuous collector runtime data
+apps/api/data/continuous-collector/
+data/continuous-collector/

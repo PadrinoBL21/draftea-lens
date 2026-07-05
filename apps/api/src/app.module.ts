@@ -11,6 +11,7 @@ import { BacktestingModule } from './backtesting/backtesting.module';
 import { MlBaselineModule } from './ml-baseline/ml-baseline.module';
 import { ModelGovernanceModule } from './model-governance/model-governance.module';
 import { DataQualityModule } from './data-quality/data-quality.module';
+import { ContinuousCollectorModule } from './continuous-collector/continuous-collector.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { DataQualityModule } from './data-quality/data-quality.module';
     MlBaselineModule,
     ModelGovernanceModule,
     DataQualityModule,
+    ContinuousCollectorModule,
   ],
   controllers: [HealthController],
 })

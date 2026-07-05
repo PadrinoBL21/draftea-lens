@@ -1,0 +1,91 @@
+{
+  "runId": "collector_run_20260705t023000000z_sample1",
+  "startedAt": "2026-07-05T02:30:00.000Z",
+  "finishedAt": "2026-07-05T02:30:15.000Z",
+  "collectorVersion": "continuous-collector-v0.1",
+  "status": "completed_with_warnings",
+  "config": {
+    "bankroll": 1250,
+    "runLabel": "qa-fixture",
+    "enablePaperPicks": true,
+    "maxPaperPicks": 10,
+    "enableOddsSnapshot": true,
+    "maxLines": 200,
+    "rebuildFeatureStore": true,
+    "maxFeatureVectors": 5000,
+    "auditDataQuality": true,
+    "persistDataQualityAudit": true
+  },
+  "steps": [
+    {
+      "name": "paper_scan",
+      "status": "success",
+      "startedAt": "2026-07-05T02:30:00.000Z",
+      "finishedAt": "2026-07-05T02:30:05.000Z",
+      "durationMs": 5000,
+      "message": "Saved 2 paper pick(s).",
+      "metrics": {
+        "scanId": "scan_sample",
+        "paperPicksSaved": 2,
+        "watchlistCount": 10
+      }
+    },
+    {
+      "name": "odds_snapshot",
+      "status": "success",
+      "startedAt": "2026-07-05T02:30:05.000Z",
+      "finishedAt": "2026-07-05T02:30:10.000Z",
+      "durationMs": 5000,
+      "message": "Saved 40 odds line observation(s).",
+      "metrics": {
+        "snapshotId": "odds_snapshot_sample",
+        "oddsLinesSaved": 40
+      }
+    },
+    {
+      "name": "feature_store_rebuild",
+      "status": "success",
+      "startedAt": "2026-07-05T02:30:10.000Z",
+      "finishedAt": "2026-07-05T02:30:12.000Z",
+      "durationMs": 2000,
+      "message": "Built 43 feature vector(s).",
+      "metrics": {
+        "rebuildId": "feature_rebuild_sample",
+        "featureVectorsBuilt": 43,
+        "paperPickVectors": 2,
+        "oddsLineVectors": 41
+      }
+    },
+    {
+      "name": "data_quality_audit",
+      "status": "success",
+      "startedAt": "2026-07-05T02:30:12.000Z",
+      "finishedAt": "2026-07-05T02:30:15.000Z",
+      "durationMs": 3000,
+      "message": "Data quality readiness: collecting_data.",
+      "metrics": {
+        "auditId": "data_quality_audit_sample",
+        "readiness": "collecting_data",
+        "blockerCount": 4,
+        "warningCount": 6,
+        "paperPicks": 2,
+        "settledPicks": 0,
+        "labelableVectors": 0,
+        "oddsLineObservations": 80
+      }
+    }
+  ],
+  "summary": {
+    "paperPicksSaved": 2,
+    "oddsLinesSaved": 40,
+    "featureVectorsBuilt": 43,
+    "dataQualityReadiness": "collecting_data",
+    "blockerCount": 4,
+    "warningCount": 6,
+    "recommendation": "collecting_data"
+  },
+  "saved": {
+    "runsPath": "data/continuous-collector/runs.jsonl",
+    "latestRunPath": "data/continuous-collector/latest-run.json"
+  }
+}
