@@ -1,0 +1,17 @@
+.git
+.gitignore
+node_modules
+**/node_modules
+**/dist
+**/.angular
+**/.turbo
+**/coverage
+.env
+.env.*.local
+apps/api/data
+apps/web/dist
+data
+*.log
+npm-debug.log*
+pnpm-debug.log*
+Dockerfile.*.bak

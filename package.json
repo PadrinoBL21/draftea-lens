@@ -9,9 +9,14 @@
   "scripts": {
     "dev:api": "npm --workspace apps/api run start:dev",
     "build": "npm --workspaces run build",
-    "test:core": "npm --workspace packages/core run test",
+    "test:core": "pnpm --filter @draftea-lens/core run test",
     "lint": "echo \"lint pending\"",
-    "qa:fixtures": "npm --workspace apps/api run qa:fixtures",
-    "qa": "npm run test:core && npm run qa:fixtures && npm --workspace apps/api run qa:backtesting && npm --workspace apps/api run qa:ml-baseline && npm --workspace apps/api run qa:model-governance && npm --workspace apps/api run qa:data-quality && npm --workspace apps/api run qa:collector && npm --workspace apps/api run qa:settlement-assistant && npm --workspace apps/api run qa:scheduler && npm --workspace apps/api run qa:dashboard && npm --workspace apps/web run qa:dashboard-web && npm --workspace apps/api run qa:result-intake && npm --workspace apps/api run qa:labeling && npm --workspace apps/api run qa:training-dataset && npm --workspace apps/api run qa:ml-baseline-v2"
+    "qa:fixtures": "pnpm --filter @draftea-lens/api run qa:fixtures",
+    "qa": "pnpm run test:core && pnpm run qa:fixtures && pnpm --filter @draftea-lens/api run qa:backtesting && pnpm --filter @draftea-lens/api run qa:ml-baseline && pnpm --filter @draftea-lens/api run qa:model-governance && pnpm --filter @draftea-lens/api run qa:data-quality && pnpm --filter @draftea-lens/api run qa:collector && pnpm --filter @draftea-lens/api run qa:settlement-assistant && pnpm --filter @draftea-lens/api run qa:scheduler && pnpm --filter @draftea-lens/api run qa:dashboard && pnpm --filter @draftea-lens/web run qa:dashboard-web && pnpm --filter @draftea-lens/api run qa:result-intake && pnpm --filter @draftea-lens/api run qa:labeling && pnpm --filter @draftea-lens/api run qa:training-dataset && pnpm --filter @draftea-lens/api run qa:ml-baseline-v2 && pnpm run qa:docker",
+    "qa:docker": "pnpm --filter @draftea-lens/api run qa:docker"
+  },
+  "packageManager": "pnpm@11.15.1",
+  "devDependencies": {
+    "typescript": "5.5.4"
   }
 }

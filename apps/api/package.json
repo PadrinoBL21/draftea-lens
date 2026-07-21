@@ -18,7 +18,8 @@
     "qa:result-intake": "node test/qa-result-intake.mjs",
     "qa:labeling": "node test/qa-labeling-pipeline.mjs",
     "qa:training-dataset": "node test/qa-training-dataset-export.mjs",
-    "qa:ml-baseline-v2": "node test/qa-ml-baseline-v2.mjs"
+    "qa:ml-baseline-v2": "node test/qa-ml-baseline-v2.mjs",
+    "qa:docker": "node test/qa-docker-deployment.mjs"
   },
   "dependencies": {
     "@draftea-lens/core": "file:../../packages/core",
@@ -35,6 +36,6 @@
     "@nestjs/schematics": "^10.1.4",
     "@nestjs/testing": "^10.4.2",
     "@types/node": "^20.14.12",
-    "typescript": "^5.5.4"
+    "typescript": "5.5.4"
   }
 }

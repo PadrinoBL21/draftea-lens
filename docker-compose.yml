@@ -1,27 +1,53 @@
+name: ${COMPOSE_PROJECT_NAME:-draftea-lens}
+
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: draftea-lens-postgres
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: ${COMPOSE_PROJECT_NAME:-draftea-lens}-api:latest
+    container_name: ${COMPOSE_PROJECT_NAME:-draftea-lens}-api
     restart: unless-stopped
     environment:
-      POSTGRES_USER: lens
-      POSTGRES_PASSWORD: lens
-      POSTGRES_DB: draftea_lens
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3000
+      THE_ODDS_API_KEY: ${THE_ODDS_API_KEY:-}
+      SERVER_ID: ${SERVER_ID:-local-dev}
+      SERVER_ROLE: ${SERVER_ROLE:-primary}
+      COLLECTOR_ENABLED: ${COLLECTOR_ENABLED:-false}
+      SCHEDULER_ENABLED: ${SCHEDULER_ENABLED:-false}
+      REAL_STAKE_ENABLED: ${REAL_STAKE_ENABLED:-false}
+      DATA_DIR: /app/apps/api/data
     ports:
-      - "5432:5432"
+      - "${API_PORT:-3010}:3000"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - draftea_api_data:/app/apps/api/data
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000/dashboard/overview').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
-  redis:
-    image: redis:7-alpine
-    container_name: draftea-lens-redis
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    image: ${COMPOSE_PROJECT_NAME:-draftea-lens}-web:latest
+    container_name: ${COMPOSE_PROJECT_NAME:-draftea-lens}-web
     restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_started
     ports:
-      - "6379:6379"
-    command: ["redis-server", "--appendonly", "yes"]
-    volumes:
-      - redis_data:/data
+      - "${WEB_PORT:-4210}:80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
 volumes:
-  postgres_data:
-  redis_data:
+  draftea_api_data:
+    name: ${COMPOSE_PROJECT_NAME:-draftea-lens}_api_data
