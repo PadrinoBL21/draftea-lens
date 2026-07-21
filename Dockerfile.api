@@ -33,4 +33,4 @@ COPY --from=build /app/packages/core/package.json ./packages/core/package.json
 COPY --from=build /app/packages/core/dist ./packages/core/dist
 RUN mkdir -p /app/apps/api/data
 EXPOSE 3000
-CMD ["pnpm", "--filter", "@draftea-lens/api", "run", "start:prod"]
+CMD ["node", "apps/api/dist/main.js"]
