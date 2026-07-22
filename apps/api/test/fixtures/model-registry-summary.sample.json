@@ -1,0 +1,12 @@
+{
+  "registryVersion": "model-registry-v2-v0.1",
+  "generatedAt": "2026-07-05T04:00:00.000Z",
+  "totalModels": 2,
+  "championModelId": "consensus-ev-v0.1",
+  "candidateModels": 0,
+  "blockedModels": 1,
+  "archivedModels": 0,
+  "totalEvaluations": 1,
+  "latestEvaluationStatus": "blocked_insufficient_data",
+  "latestEvaluationRecommendation": "collect_more_data"
+}

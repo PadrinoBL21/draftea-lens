@@ -19,7 +19,8 @@
     "qa:labeling": "node test/qa-labeling-pipeline.mjs",
     "qa:training-dataset": "node test/qa-training-dataset-export.mjs",
     "qa:ml-baseline-v2": "node test/qa-ml-baseline-v2.mjs",
-    "qa:docker": "node test/qa-docker-deployment.mjs"
+    "qa:docker": "node test/qa-docker-deployment.mjs",
+    "qa:model-registry": "node test/qa-model-registry-v2.mjs"
   },
   "dependencies": {
     "@draftea-lens/core": "file:../../packages/core",

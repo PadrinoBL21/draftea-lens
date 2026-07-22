@@ -12,8 +12,9 @@
     "test:core": "pnpm --filter @draftea-lens/core run test",
     "lint": "echo \"lint pending\"",
     "qa:fixtures": "pnpm --filter @draftea-lens/api run qa:fixtures",
-    "qa": "pnpm run test:core && pnpm run qa:fixtures && pnpm --filter @draftea-lens/api run qa:backtesting && pnpm --filter @draftea-lens/api run qa:ml-baseline && pnpm --filter @draftea-lens/api run qa:model-governance && pnpm --filter @draftea-lens/api run qa:data-quality && pnpm --filter @draftea-lens/api run qa:collector && pnpm --filter @draftea-lens/api run qa:settlement-assistant && pnpm --filter @draftea-lens/api run qa:scheduler && pnpm --filter @draftea-lens/api run qa:dashboard && pnpm --filter @draftea-lens/web run qa:dashboard-web && pnpm --filter @draftea-lens/api run qa:result-intake && pnpm --filter @draftea-lens/api run qa:labeling && pnpm --filter @draftea-lens/api run qa:training-dataset && pnpm --filter @draftea-lens/api run qa:ml-baseline-v2 && pnpm run qa:docker",
-    "qa:docker": "pnpm --filter @draftea-lens/api run qa:docker"
+    "qa": "pnpm run test:core && pnpm run qa:fixtures && pnpm --filter @draftea-lens/api run qa:backtesting && pnpm --filter @draftea-lens/api run qa:ml-baseline && pnpm --filter @draftea-lens/api run qa:model-governance && pnpm --filter @draftea-lens/api run qa:data-quality && pnpm --filter @draftea-lens/api run qa:collector && pnpm --filter @draftea-lens/api run qa:settlement-assistant && pnpm --filter @draftea-lens/api run qa:scheduler && pnpm --filter @draftea-lens/api run qa:dashboard && pnpm --filter @draftea-lens/web run qa:dashboard-web && pnpm --filter @draftea-lens/api run qa:result-intake && pnpm --filter @draftea-lens/api run qa:labeling && pnpm --filter @draftea-lens/api run qa:training-dataset && pnpm --filter @draftea-lens/api run qa:ml-baseline-v2 && pnpm run qa:model-registry && pnpm run qa:docker",
+    "qa:docker": "pnpm --filter @draftea-lens/api run qa:docker",
+    "qa:model-registry": "pnpm --filter @draftea-lens/api run qa:model-registry"
   },
   "packageManager": "pnpm@11.15.1",
   "devDependencies": {

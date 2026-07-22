@@ -20,8 +20,11 @@ import { LabelingPipelineModule } from './labeling-pipeline/labeling-pipeline.mo
 import { TrainingDatasetExportModule } from './training-dataset-export/training-dataset-export.module';
 import { MlBaselineV2Module } from './ml-baseline-v2/ml-baseline-v2.module';
 
+import { ModelRegistryModule } from './model-registry/model-registry.module';
+
 @Module({
   imports: [
+    ModelRegistryModule,
     MoneylineModule,
     MarketsModule,
     SourcesModule,
